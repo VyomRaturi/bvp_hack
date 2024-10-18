@@ -1,7 +1,7 @@
 import { NavbarMobile } from "@/components/navbar/navbar-mobile";
 import { NavbarUserLinks } from "@/components/navbar/navbar-user-links";
 import { buttonVariants } from "@/components/ui/button";
-import { FishIcon, ScanTextIcon } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { FC } from "react";
 
@@ -12,11 +12,14 @@ export const NavBar: FC = () => {
         <nav className="container px-6 md:px-8 py-4">
           <div className="flex items-center">
             <Link href="/" className="hover:opacity-80 transition-opacity">
-              <div className="flex items-center">
-                <FishIcon className="w-8 h-8 mr-2 inline" />{" "}
-                <span className="text-xl font-semibold tracking-tighter text-slate-800 mr-6">
-                  Venefish
-                </span>
+              <div className="flex flex-col items-center">
+                <Image
+                  alt="logo"
+                  height={50}
+                  width={50}
+                  src="/Latentlogo.png"
+                />
+                <span className="font-semibold tracking-tighter mx-auto text-slate-800"></span>
               </div>
             </Link>
             <div className="hidden md:flex justify-between grow">
