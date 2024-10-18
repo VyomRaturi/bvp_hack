@@ -2,9 +2,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
-import Team from "@/models/Team";
-import Hackathon from "@/models/Hackathon";
-// import Question from "@/models/Question";
+import {Team, Hackathon, Question} from "@/models/index";
 import { getCurrentUser } from "@/lib/actions/getCurrentUser";
 
 export async function GET(request: NextRequest, { params }: { params: { teamId: string } }) {
