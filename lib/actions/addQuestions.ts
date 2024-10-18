@@ -35,11 +35,11 @@ export const addQuestionsToHackathon = async (
 ): Promise<CreatedQuestion[]> => {
   const { hackathonId, questions } = payload;
 
-    // Input validation
-    console.log(payload);
-    if (!hackathonId || typeof hackathonId !== "string") {
-        throw new Error("Invalid hackathonId provided.");
-    }
+  // Input validation
+  console.log(payload);
+  if (!hackathonId || typeof hackathonId !== "string") {
+    throw new Error("Invalid hackathonId provided.");
+  }
 
   if (!questions || !Array.isArray(questions) || questions.length === 0) {
     throw new Error("Questions array is required and cannot be empty.");
@@ -103,15 +103,15 @@ export const addQuestionsToHackathon = async (
       hackathon.questions = [];
     }
 
-        if (newQuestion._id) {
-            hackathon.questions.push(newQuestion._id as mongoose.Types.ObjectId);
-        } else {
-            throw new Error("New question ID is missing.");
-        }
+    if (newQuestion._id) {
+      hackathon.questions.push(newQuestion._id as mongoose.Types.ObjectId);
+    } else {
+      throw new Error("New question ID is missing.");
     }
-    console.log(hackathon);
-    // Save hackathon with new questions
-    await hackathon.save();
+  }
+  console.log(hackathon);
+  // Save hackathon with new questions
+  await hackathon.save();
 
   return createdQuestions;
 };
@@ -155,10 +155,9 @@ export const getQuestionsFromParameters = async (
       },
     }),
   });
-
+  console.log("here \n\n\n\n", res);
   const result = await res.json();
-  const content = JSON.parse(
-    result.choices[0].message.content
-  ) as QuestionInput[];
+  console.log(result, "\n\n\n\n");
+  const content = result.choices[0].message.content as QuestionInput[];
   return content;
 };

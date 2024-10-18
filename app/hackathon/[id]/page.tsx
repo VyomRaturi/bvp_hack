@@ -21,7 +21,7 @@ type Props = {
 
 const OrganiserQuestion = async (props: Props) => {
   // Get id from URL
-  console.log("id: ", props.params.id);
+  // console.log("id: ", props.params.id);
   let defaultParameters: string[] = [];
 
   try {
@@ -33,12 +33,11 @@ const OrganiserQuestion = async (props: Props) => {
 
     // Escape special characters in the description
     const escapedDescription = escapeSpecialChars(hackathon.description);
-    console.log("Escaped Description:", escapedDescription);
 
     // Get default parameters
     defaultParameters = await getParameters(hackathon.name, escapedDescription);
-    console.log(defaultParameters);
-    console.log(hackathon);
+    // console.log(defaultParameters);
+    // console.log(hackathon);
   } catch (error) {
     console.log(error);
   }

@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { FaStar } from "react-icons/fa";
 import { Button } from "./ui/button";
+import { getQuestionsFromParameters } from "@/lib/actions/addQuestions";
 
 type ParameterSelectorProps = {
   defaultParameters: string[];
@@ -49,8 +50,14 @@ const ParameterSelector: React.FC<ParameterSelectorProps> = ({
     }
   };
 
-  const submitParameters = () => {
+  const submitParameters = async () => {
     console.log(selectedParams);
+    try {
+      const content = await getQuestionsFromParameters(selectedParams);
+      console.log(content);
+    } catch (error) {
+      console.error("Error submitting parameters:", error);
+    }
   };
 
   return (
