@@ -51,6 +51,7 @@ export async function POST(request: NextRequest) {
     const data = await request.json();
 
     const { hackName, hackDesc, start, end, judges, teams } = data;
+    console.log(data);
 
     // Input validation
     if (
@@ -93,7 +94,7 @@ export async function POST(request: NextRequest) {
         throw new Error("Each judge must have a name and an email.");
       }
 
-      const normalizedEmail = email.toLowerCase();
+      const normalizedEmail = "jud" + email.toLowerCase() ;
 
       // Check if judge already exists
       const existingJudge = await User.findOne({ email: normalizedEmail });
