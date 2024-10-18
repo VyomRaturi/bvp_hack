@@ -155,9 +155,13 @@ export const getQuestionsFromParameters = async (
       },
     }),
   });
-  console.log("here \n\n\n\n", res);
+
   const result = await res.json();
-  console.log(result, "\n\n\n\n");
-  const content = result.choices[0].message.content as QuestionInput[];
-  return content;
+  const content = result.choices[0].message.content;
+
+  // Trim starting and ending ```json tags and parse the content
+  const trimmedContent = content.replace(/```json|```/g, "").trim();
+  const parsedContent = JSON.parse(trimmedContent) as QuestionInput[];
+
+  return parsedContent;
 };

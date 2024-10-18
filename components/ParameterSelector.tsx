@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { FaStar } from "react-icons/fa";
 import { Button } from "./ui/button";
 import { getQuestionsFromParameters } from "@/lib/actions/addQuestions";
+import { Loader2 } from "lucide-react";
 
 type ParameterSelectorProps = {
   defaultParameters: string[];
@@ -12,6 +13,7 @@ type ParameterSelectorProps = {
 const ParameterSelector: React.FC<ParameterSelectorProps> = ({
   defaultParameters,
 }) => {
+  const [loading, setLoading] = useState(false);
   const [defaultParams, setDefaultParams] =
     useState<string[]>(defaultParameters);
   const [selectedParams, setSelectedParams] = useState<string[]>([]);
@@ -53,8 +55,10 @@ const ParameterSelector: React.FC<ParameterSelectorProps> = ({
   const submitParameters = async () => {
     console.log(selectedParams);
     try {
+      setLoading(true);
       const content = await getQuestionsFromParameters(selectedParams);
       console.log(content);
+      setLoading(false);
     } catch (error) {
       console.error("Error submitting parameters:", error);
     }
@@ -113,7 +117,10 @@ const ParameterSelector: React.FC<ParameterSelectorProps> = ({
           rows={4}
         />
 
-        <Button onClick={submitParameters}>Submit Parameters</Button>
+        <Button disabled={loading} onClick={submitParameters}>
+          <Loader2 size={16} className={loading ? "animate-spin" : "hidden"} />
+          Submit Parameters
+        </Button>
       </div>
     </div>
   );
