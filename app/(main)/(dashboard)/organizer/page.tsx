@@ -13,11 +13,25 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
+import { MoveLeft, MoveRight } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import Link from "next/link";
+import * as XLSX from "xlsx"; // Import xlsx library
+
+interface JudgeInput {
+  name: string;
+  email: string;
+}
+
+interface TeamInput {
+  name: string;
+  members: string[];
+}
 
 const steps = [
-  "Name Your Hack-a-Thon",
-  "",
-  "Budget",
+  "Hack-a-thon Details",
+  "Create Judges",
+  "Add Teams",
   "Travel Type",
   "Key Interests",
   "Travel Companions",
@@ -27,6 +41,10 @@ export default function TravelForm() {
   const [loading, setLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({});
+  const [judges, setJudges] = useState<JudgeInput[]>([]);
+  const [teams, setTeams] = useState<TeamInput[]>([]);
+  const [judgeFile, setJudgeFile] = useState<File | null>(null); // State for uploaded judge file
+  const [teamFile, setTeamFile] = useState<File | null>(null); // State for uploaded team file
 
   const handleNext = async () => {
     if (currentStep < steps.length - 1) {
@@ -42,35 +60,165 @@ export default function TravelForm() {
     }
   };
 
-  const ToggleBox = ({
-    label,
-    isSelected,
-    onClick,
-  }: {
-    label: string;
-    isSelected: boolean;
-    onClick: () => void;
-  }) => (
-    <button
-      className={`p-4 rounded-lg text-center transition-colors ${
-        isSelected
-          ? "bg-primary text-primary-foreground"
-          : "bg-secondary hover:bg-secondary/80"
-      }`}
-      onClick={onClick}
-    >
-      {label}
-    </button>
-  );
+  const handleJudgeFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setJudgeFile(file); // Store the judge file in the state
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const data = new Uint8Array(event.target?.result as ArrayBuffer);
+        const workbook = XLSX.read(data, { type: "array" });
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+        const parsedData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+        const judgesData: JudgeInput[] = parsedData
+          .slice(1) // Skip the header row
+          .map((row: any) => ({
+            name: row[0],
+            email: row[1],
+          }));
+
+        setJudges(judgesData);
+      };
+      reader.readAsArrayBuffer(file);
+    } else {
+      setJudgeFile(null); // Reset judge file state if no file is selected
+    }
+  };
+
+  const handleTeamFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setTeamFile(file); // Store the team file in the state
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const data = new Uint8Array(event.target?.result as ArrayBuffer);
+        const workbook = XLSX.read(data, { type: "array" });
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+        const parsedData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+        const teamsData: TeamInput[] = parsedData
+          .slice(1) // Skip the header row
+          .map((row: any) => ({
+            name: row[0],
+            members: row[1] ? row[1].split(",") : [],
+          }));
+
+        setTeams(teamsData);
+      };
+      reader.readAsArrayBuffer(file);
+    } else {
+      setTeamFile(null); // Reset team file state if no file is selected
+    }
+  };
 
   const renderStep = () => {
     switch (currentStep) {
       case 0:
-        return <div className="space-y-3 relative">step0</div>;
+        return (
+          <div className="h-full space-y-4">
+            <div>
+              <Label className="font-medium text-lg" htmlFor="hackathon-name">
+                Name Your Hack-a-Thon
+              </Label>
+              <Input
+                id="hackathon-name"
+                className="text-2xl my-1"
+                type="text"
+              />
+            </div>
+
+            <div>
+              <Label className="font-medium text-lg" htmlFor="description">
+                Description
+              </Label>
+              <Textarea id="description" className="my-1" />
+            </div>
+
+            <div>
+              <Label className="font-medium text-lg">Timeline</Label>
+              <div className="flex space-x-4">
+                <div className="w-full">
+                  <Label htmlFor="start-date">Start Date</Label>
+                  <Input id="start-date" type="date" />
+                </div>
+                <div className="w-full">
+                  <Label htmlFor="end-date">End Date</Label>
+                  <Input id="end-date" type="date" />
+                </div>
+              </div>
+            </div>
+          </div>
+        );
       case 1:
-        return <div>Step 1</div>;
+        return (
+          <div>
+            <div>
+              Upload the CSV with details of judges.
+              <Link className="ml-1 underline text-blue-700" href="#">
+                Download the sample excel from here
+              </Link>
+              <Input
+                className="my-3"
+                type="file"
+                accept=".xlsx, .xls, .csv"
+                onChange={handleJudgeFileUpload}
+              />
+              {judgeFile && (
+                <p className="text-green-600">
+                  File "{judgeFile.name}" uploaded successfully.
+                </p>
+              )}
+            </div>
+
+            <div className="mt-4">
+              <h3>Uploaded Judges Data:</h3>
+              <ul>
+                {judges.map((judge, index) => (
+                  <li key={index}>
+                    {index + 1}. {judge.name} - {judge.email}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        );
       case 2:
-        return <div>step2</div>;
+        return (
+          <div>
+            <div>
+              Upload the CSV with details of teams.
+              <Link className="ml-1 underline text-blue-700" href="#">
+                Download the sample excel from here
+              </Link>
+              <Input
+                className="my-3"
+                type="file"
+                accept=".xlsx, .xls, .csv"
+                onChange={handleTeamFileUpload}
+              />
+              {teamFile && (
+                <p className="text-green-600">
+                  File "{teamFile.name}" uploaded successfully.
+                </p>
+              )}
+            </div>
+
+            <div className="mt-4">
+              <h3>Uploaded Teams Data:</h3>
+              <ul>
+                {teams.map((team, index) => (
+                  <li key={index}>
+                    {index + 1}. {team.name} - Members:{" "}
+                    {team.members.join(", ")}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        );
       case 3:
         return <div>step3</div>;
       case 4:
@@ -84,7 +232,7 @@ export default function TravelForm() {
     <div className="flex items-center justify-center min-h-[calc(100vh-72px)]">
       <Card className="w-full border-none shadow-none max-w-2xl mx-auto">
         <CardHeader>
-          <CardTitle className="text-4xl">Create Hack-a-Thon</CardTitle>
+          <CardTitle className="text-5xl">Create Hack-a-Thon</CardTitle>
           <CardDescription>
             Plan your next adventure step by step
           </CardDescription>
@@ -111,12 +259,14 @@ export default function TravelForm() {
         </CardContent>
         <CardFooter className="flex justify-between">
           {currentStep > 0 ? (
-            <Button onClick={handlePrevious}>Previous</Button>
+            <Button onClick={handlePrevious}>
+              <MoveLeft />
+            </Button>
           ) : (
             <div></div>
           )}
           <Button onClick={handleNext}>
-            {currentStep === steps.length - 1 ? "Submit" : "Next"}
+            {currentStep === steps.length - 1 ? "Create" : <MoveRight />}
           </Button>
         </CardFooter>
       </Card>
