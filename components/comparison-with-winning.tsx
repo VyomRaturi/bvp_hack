@@ -157,35 +157,36 @@ const chartConfig = {
     label: "Scores",
   },
   Mean: {
-    label: "Mean Score",
+    label: "Mean",
     color: "#625CF9",
   },
   Mode: {
-    label: "Mode Score",
+    label: "Mode",
     color: "#625CF966",
   },
   Median: {
-    label: "Median Score",
+    label: "Median",
     color: "#625CF999",
   },
   YourTeamAverage: {
-    label: "Your Team Score",
+    label: "You",
     color: "#625CF9CC",
   },
 } satisfies ChartConfig;
 
 export function ComparisonWinning() {
   return (
-    <Card>
-      <CardHeader>
+    <Card className="">
+      <CardHeader className="p-4">
         <CardTitle>Team Statistics</CardTitle>
         <CardDescription>
           Mean, Mode, Median, and Your Team Score
         </CardDescription>
       </CardHeader>
-      <CardContent className="bg-muted">
-        <ChartContainer config={chartConfig}>
+      <CardContent className="bg-muted ">
+        <ChartContainer config={chartConfig} className="h-[150px] w-full pt-5">
           <BarChart
+            className="w-full"
             accessibilityLayer
             data={chartData}
             layout="vertical"
@@ -202,7 +203,7 @@ export function ComparisonWinning() {
               tickFormatter={(value) =>
                 chartConfig[value as keyof typeof chartConfig]?.label
               }
-              className=""
+              className="whitespace-nowrap whi"
             />
             <XAxis dataKey="value" type="number" hide />
             <ChartTooltip

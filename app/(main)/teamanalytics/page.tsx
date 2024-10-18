@@ -3,7 +3,6 @@ import { ComparisonWinning } from "@/components/comparison-with-winning";
 import { HighScoring } from "@/components/high-scoring";
 import { LowScoring } from "@/components/low-scoring";
 import React from "react";
-
 type Props = {};
 interface TeamScore {
   parameter: string;
@@ -195,14 +194,14 @@ function getTeamRank(teamId: number) {
 const MyTeamAnalytics = (props: Props) => {
   return (
     <div className="w-full p-14 gap-4 grid grid-rows-6 relative">
-      <div className="row-span-2 gap-4 grid grid-cols-10">
-        <div className="bg-muted rounded-3xl col-span-4 flex items-center justify-center flex-col">
-          <h1 className="font-bold px-4 py-2 text-4xl ">
-            #{getTeamRank(3)}/{AllteamScores.length}
+      <div className=" gap-4 flex">
+        <div className="bg-muted rounded-3xl w-[30%] flex items-center justify-center flex-col">
+          <h1 className="font-bold px-4 py-2 text-8xl ">
+            #3 <span className="text-lg">/30</span>
           </h1>
-          <h1 className="font-bold px-4 py-2 ">Your Rank </h1>
+          <h1 className="font-bold text-4xl px-4 py-2 ">Your Rank </h1>
         </div>
-        <div className="col-span-6">
+        <div className="col-span-6 w-[70%]">
           <ComparisonWinning />
         </div>
       </div>
