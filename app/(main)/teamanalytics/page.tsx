@@ -7,24 +7,7 @@ import React from 'react'
 type Props = {}
 
 
-export const IndividualTeamScores = [
-    {
-        teamId: 1,
-        teamName: " Alpha",
-        scores: [
-            { parameter: "innovationCreativity", score: 3 },
-            { parameter: "technicalImplementation", score: 4 },
-            { parameter: "problemSolutionFit", score: 2 },
-            { parameter: "impactScalability", score: 3 },
-            { parameter: "userExperience", score: 4 },
-            { parameter: "designVisualAppeal", score: 3 },
-            { parameter: "presentationCommunication", score: 2 },
-            { parameter: "feasibilityPracticality", score: 4 },
-            { parameter: "collaborationTeamwork", score: 3 },
-            { parameter: "useOfTechnology", score: 4 }
-        ]
-    }
-];
+
 
 export const AllteamScores = [
     {

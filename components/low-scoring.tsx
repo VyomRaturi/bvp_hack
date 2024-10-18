@@ -251,7 +251,7 @@ export function LowScoring() {
                             axisLine={false  }
                         />
                         <ChartTooltip
-                            cursor={false}
+                            cursor={false}  
                             content={<ChartTooltipContent hideLabel />}
                         />
                         <Bar dataKey="score" fill="var(--color-score)" radius={8} />
