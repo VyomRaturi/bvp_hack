@@ -42,7 +42,7 @@ export const CustomChart: React.FC<PerformanceProps> = ({ parameterName, title, 
         <CardTitle>{title}</CardTitle>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig}>
+        <ChartContainer config={chartConfig} className="h-[200px] w-full">
           <BarChart data={chartData}>
             <CartesianGrid vertical={false} />
             <XAxis
