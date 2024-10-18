@@ -45,7 +45,10 @@ const OrganiserQuestion = async (props: Props) => {
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold">Organiser Question</h1>
-      <ParameterSelector defaultParameters={defaultParameters} />
+      <ParameterSelector
+        hackId={props.params.id}
+        defaultParameters={defaultParameters}
+      />
     </div>
   );
 };

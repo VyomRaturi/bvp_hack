@@ -45,6 +45,9 @@ export const addQuestionsToHackathon = async (
     throw new Error("Questions array is required and cannot be empty.");
   }
 
+  // Convert the string hackathonId to ObjectId
+  const hackathonObjectId = new mongoose.Types.ObjectId(hackathonId);
+
   // Validate each question object
   questions.forEach((q, index) => {
     if (!q.question || typeof q.question !== "string") {
@@ -77,7 +80,7 @@ export const addQuestionsToHackathon = async (
   await connectDB();
 
   // Find the hackathon
-  const hackathon = await Hackathon.findById(hackathonId);
+  const hackathon = await Hackathon.findById(hackathonObjectId);
   if (!hackathon) {
     throw new Error("Hackathon not found.");
   }
@@ -90,7 +93,7 @@ export const addQuestionsToHackathon = async (
       question: q.question,
       parameter: q.parameter,
       ans: q.ans,
-      hackathon: hackathonId,
+      hackathon: hackathonObjectId,
     });
 
     createdQuestions.push({
@@ -99,6 +102,7 @@ export const addQuestionsToHackathon = async (
       parameter: newQuestion.parameter,
       ans: newQuestion.ans,
     });
+
     if (!hackathon.questions) {
       hackathon.questions = [];
     }
@@ -109,7 +113,7 @@ export const addQuestionsToHackathon = async (
       throw new Error("New question ID is missing.");
     }
   }
-  console.log(hackathon);
+
   // Save hackathon with new questions
   await hackathon.save();
 

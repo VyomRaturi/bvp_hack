@@ -10,7 +10,7 @@ interface AnswerOption {
   score: number;
 }
 
-interface Question {
+export interface Question {
   index: number;
   question: string;
   parameter: string;
@@ -177,15 +177,17 @@ const QuestionsPreview: React.FC<QuestionsPreviewProps> = ({
           </div>
         ))}
 
-        <button
-          type="submit"
-          className={`w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200 ${
-            submitting ? "opacity-50 cursor-not-allowed" : ""
-          }`}
-          disabled={submitting}
-        >
-          {submitting ? "Submitting..." : "Submit Evaluation"}
-        </button>
+        {questionsArray ? null : (
+          <button
+            type="submit"
+            className={`w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200 ${
+              submitting ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+            disabled={submitting}
+          >
+            {submitting ? "Submitting..." : "Submit Evaluation"}
+          </button>
+        )}
       </form>
     </div>
   );

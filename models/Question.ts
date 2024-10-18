@@ -11,7 +11,7 @@ export interface IQuestion extends Document {
   question: string;
   ans: Answer[];
   parameter: string;
-  hackathon: mongoose.Types.ObjectId; // Reference to Hackathon
+  // hackathon: mongoose.Types.ObjectId;
 }
 
 const AnswerSchema: Schema = new Schema({
@@ -24,12 +24,13 @@ const QuestionSchema: Schema<IQuestion> = new Schema(
     question: { type: String, required: true },
     ans: [AnswerSchema],
     parameter: { type: String, required: true },
-    hackathon: { type: Schema.Types.ObjectId, ref: "Hackathon", required: true },
+    // hackathon: { type: Schema.Types.ObjectId, ref: "Hackathon", required: true },
   },
   { timestamps: true }
 );
 
 const Question: Model<IQuestion> =
-  mongoose.models.Question || mongoose.model<IQuestion>("Question", QuestionSchema);
+  mongoose.models.Question ||
+  mongoose.model<IQuestion>("Question", QuestionSchema);
 
 export default Question;
