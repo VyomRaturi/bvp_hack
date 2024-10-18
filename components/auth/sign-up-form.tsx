@@ -1,10 +1,10 @@
 "use client";
 
 import * as React from "react";
+import { FC, useState } from "react";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -13,12 +13,12 @@ import {
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { FC, useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "reactfire";
 import { createUser } from "@/lib/actions/createUser";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -47,14 +47,21 @@ export const SignUpForm: FC<SignUpFormProps> = ({ onShowLogin, onSignUp }) => {
     try {
       setIsLoading(true);
 
-      await createUser(auth, email, password, "user");
+      const user = await createUserWithEmailAndPassword(auth, email, password);
 
-      toast({ title: "Account created!" });
+      if (user?.user.uid && user.user.email) {
+        await createUser(email, password, "user");
+
+        toast({ title: "Account created!" });
+      }
     } catch (err: any) {
       if ("code" in err && err.code.includes("already")) {
         toast({ title: "User already exists" });
       } else {
-        toast({ title: "Error signing up", description: `${err}` });
+        toast({
+          title: "Error signing up",
+          description: `${err.message || err}`,
+        });
       }
     } finally {
       setIsLoading(false);
@@ -75,9 +82,6 @@ export const SignUpForm: FC<SignUpFormProps> = ({ onShowLogin, onSignUp }) => {
                   <FormControl>
                     <Input type="email" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    A valid email is required to watch locked specials.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -91,9 +95,6 @@ export const SignUpForm: FC<SignUpFormProps> = ({ onShowLogin, onSignUp }) => {
                   <FormControl>
                     <Input type="password" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    Must be at least 8 characters long.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
