@@ -15,13 +15,15 @@ export const createAdmin = async (email: string, password: string) => {
       throw new Error("User already exists");
     }
 
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    console.log(password)
+    // const hashedPassword = await bcrypt.hash(password, 10);
+    // // const hashedPassword = await bcrypt.hash(password, 10);
+    // console.log(`Hashed password for admin ${email}: ${hashedPassword}`);
 
     // Create admin user
     const newUser = await User.create({
       email,
-      password: hashedPassword,
+      password: password,
       role: "admin",
     });
 
