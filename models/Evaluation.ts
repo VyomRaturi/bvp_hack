@@ -1,4 +1,4 @@
-import { Schema, model, Document, Types } from 'mongoose';
+import mongoose, { Schema, model, Document, Types, Model } from 'mongoose';
 import { IHackathon } from './Hackathon';
 import { IUser } from './User';
 import { ITeam } from './Team';
@@ -18,39 +18,39 @@ export interface IEvaluation extends Document {
 }
 
 const evaluationResponseSchema = new Schema<IEvaluationResponse>({
-    question: { 
-        type: Schema.Types.ObjectId, 
-        ref: 'Question', 
-        required: true 
+    question: {
+        type: Schema.Types.ObjectId,
+        ref: 'Question',
+        required: true
     },
-    selectedScore: { 
-        type: Number, 
+    selectedScore: {
+        type: Number,
         required: true,
         enum: [1, 2, 3, 4]
     }
 }, { _id: false });
 
 const evaluationSchema = new Schema<IEvaluation>({
-    hackathon: { 
-        type: Schema.Types.ObjectId, 
-        ref: 'Hackathon', 
-        required: true 
+    hackathon: {
+        type: Schema.Types.ObjectId,
+        ref: 'Hackathon',
+        required: true
     },
-    judge: { 
-        type: Schema.Types.ObjectId, 
-        ref: 'User', 
-        required: true 
+    judge: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
     },
-    team: { 
-        type: Schema.Types.ObjectId, 
-        ref: 'Team', 
-        required: true 
+    team: {
+        type: Schema.Types.ObjectId,
+        ref: 'Team',
+        required: true
     },
-    responses: { 
+    responses: {
         type: [evaluationResponseSchema],
         required: true,
         validate: {
-            validator: function(v: IEvaluationResponse[]) {
+            validator: function (v: IEvaluationResponse[]) {
                 // Assuming all questions for the hackathon are answered
                 // You may add more validation as needed
                 return v.length > 0;
@@ -58,18 +58,18 @@ const evaluationSchema = new Schema<IEvaluation>({
             message: 'Each evaluation must have at least one response.'
         }
     },
-    submittedAt: { 
-        type: Date, 
-        default: Date.now 
+    submittedAt: {
+        type: Date,
+        default: Date.now
     }
 });
 
 // Pre-save hook to update submittedAt
-evaluationSchema.pre<IEvaluation>('save', function(next) {
+evaluationSchema.pre<IEvaluation>('save', function (next) {
     this.submittedAt = new Date();
     next();
 });
 
-const Evaluation = model<IEvaluation>('Evaluation', evaluationSchema);
-
+const Evaluation: Model<IEvaluation> =
+    mongoose.models.Evaluation || model<IEvaluation>('Evaluation', evaluationSchema);;
 export default Evaluation;

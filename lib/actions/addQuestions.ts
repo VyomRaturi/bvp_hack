@@ -7,12 +7,12 @@ import Hackathon from "@/models/Hackathon";
 import Question from "@/models/Question";
 import mongoose from "mongoose";
 
-interface Answer {
+export interface Answer {
   answer: string;
   score: number;
 }
 
-interface QuestionInput {
+export interface QuestionInput {
   question: string;
   parameter: string;
   ans: Answer[];
