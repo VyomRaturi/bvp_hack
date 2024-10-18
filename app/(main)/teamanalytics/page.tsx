@@ -74,6 +74,86 @@ export const AllteamScores = [
             { parameter: "collaborationTeamwork", score: 4 },
             { parameter: "useOfTechnology", score: 4 }
         ]
+    },
+    {
+        teamId: 4,
+        teamName: "Delta",
+        scores: [
+            { parameter: "innovationCreativity", score: 2 },
+            { parameter: "technicalImplementation", score: 3 },
+            { parameter: "problemSolutionFit", score: 3 },
+            { parameter: "impactScalability", score: 2 },
+            { parameter: "userExperience", score: 4 },
+            { parameter: "designVisualAppeal", score: 3 },
+            { parameter: "presentationCommunication", score: 3 },
+            { parameter: "feasibilityPracticality", score: 4 },
+            { parameter: "collaborationTeamwork", score: 2 },
+            { parameter: "useOfTechnology", score: 3 }
+        ]
+    },
+    {
+        teamId: 5,
+        teamName: "Epsilon",
+        scores: [
+            { parameter: "innovationCreativity", score: 4 },
+            { parameter: "technicalImplementation", score: 4 },
+            { parameter: "problemSolutionFit", score: 5 },
+            { parameter: "impactScalability", score: 4 },
+            { parameter: "userExperience", score: 5 },
+            { parameter: "designVisualAppeal", score: 4 },
+            { parameter: "presentationCommunication", score: 4 },
+            { parameter: "feasibilityPracticality", score: 4 },
+            { parameter: "collaborationTeamwork", score: 4 },
+            { parameter: "useOfTechnology", score: 5 }
+        ]
+    },
+    {
+        teamId: 6,
+        teamName: "Zeta",
+        scores: [
+            { parameter: "innovationCreativity", score: 3 },
+            { parameter: "technicalImplementation", score: 2 },
+            { parameter: "problemSolutionFit", score: 4 },
+            { parameter: "impactScalability", score: 3 },
+            { parameter: "userExperience", score: 3 },
+            { parameter: "designVisualAppeal", score: 2 },
+            { parameter: "presentationCommunication", score: 3 },
+            { parameter: "feasibilityPracticality", score: 2 },
+            { parameter: "collaborationTeamwork", score: 4 },
+            { parameter: "useOfTechnology", score: 3 }
+        ]
+    },
+    {
+        teamId: 7,
+        teamName: "Theta",
+        scores: [
+            { parameter: "innovationCreativity", score: 5 },
+            { parameter: "technicalImplementation", score: 5 },
+            { parameter: "problemSolutionFit", score: 5 },
+            { parameter: "impactScalability", score: 4 },
+            { parameter: "userExperience", score: 5 },
+            { parameter: "designVisualAppeal", score: 5 },
+            { parameter: "presentationCommunication", score: 5 },
+            { parameter: "feasibilityPracticality", score: 5 },
+            { parameter: "collaborationTeamwork", score: 4 },
+            { parameter: "useOfTechnology", score: 5 }
+        ]
+    },
+    {
+        teamId: 8,
+        teamName: "Iota",
+        scores: [
+            { parameter: "innovationCreativity", score: 2 },
+            { parameter: "technicalImplementation", score: 3 },
+            { parameter: "problemSolutionFit", score: 2 },
+            { parameter: "impactScalability", score: 3 },
+            { parameter: "userExperience", score: 2 },
+            { parameter: "designVisualAppeal", score: 2 },
+            { parameter: "presentationCommunication", score: 3 },
+            { parameter: "feasibilityPracticality", score: 3 },
+            { parameter: "collaborationTeamwork", score: 3 },
+            { parameter: "useOfTechnology", score: 3 }
+        ]
     }
 ];
 

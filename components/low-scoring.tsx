@@ -1,7 +1,23 @@
-"use client";
+"use client"
 
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
-const AllteamScores = [
+import * as React from "react"
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
+
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card"
+import {
+    ChartConfig,
+    ChartContainer,
+    ChartTooltip,
+    ChartTooltipContent,
+} from "@/components/ui/chart"
+
+export const description = "An interactive bar chart"
+export const AllteamScores = [
     {
         teamId: 1,
         teamName: "Alpha",
@@ -49,160 +65,199 @@ const AllteamScores = [
             { parameter: "collaborationTeamwork", score: 4 },
             { parameter: "useOfTechnology", score: 4 }
         ]
+    },
+    {
+        teamId: 4,
+        teamName: "Delta",
+        scores: [
+            { parameter: "innovationCreativity", score: 2 },
+            { parameter: "technicalImplementation", score: 3 },
+            { parameter: "problemSolutionFit", score: 3 },
+            { parameter: "impactScalability", score: 2 },
+            { parameter: "userExperience", score: 4 },
+            { parameter: "designVisualAppeal", score: 3 },
+            { parameter: "presentationCommunication", score: 3 },
+            { parameter: "feasibilityPracticality", score: 4 },
+            { parameter: "collaborationTeamwork", score: 2 },
+            { parameter: "useOfTechnology", score: 3 }
+        ]
+    },
+    {
+        teamId: 5,
+        teamName: "Epsilon",
+        scores: [
+            { parameter: "innovationCreativity", score: 4 },
+            { parameter: "technicalImplementation", score: 4 },
+            { parameter: "problemSolutionFit", score: 5 },
+            { parameter: "impactScalability", score: 4 },
+            { parameter: "userExperience", score: 5 },
+            { parameter: "designVisualAppeal", score: 4 },
+            { parameter: "presentationCommunication", score: 4 },
+            { parameter: "feasibilityPracticality", score: 4 },
+            { parameter: "collaborationTeamwork", score: 4 },
+            { parameter: "useOfTechnology", score: 5 }
+        ]
+    },
+    {
+        teamId: 6,
+        teamName: "Zeta",
+        scores: [
+            { parameter: "innovationCreativity", score: 3 },
+            { parameter: "technicalImplementation", score: 2 },
+            { parameter: "problemSolutionFit", score: 4 },
+            { parameter: "impactScalability", score: 3 },
+            { parameter: "userExperience", score: 3 },
+            { parameter: "designVisualAppeal", score: 2 },
+            { parameter: "presentationCommunication", score: 3 },
+            { parameter: "feasibilityPracticality", score: 2 },
+            { parameter: "collaborationTeamwork", score: 4 },
+            { parameter: "useOfTechnology", score: 3 }
+        ]
+    },
+    {
+        teamId: 7,
+        teamName: "Theta",
+        scores: [
+            { parameter: "innovationCreativity", score: 5 },
+            { parameter: "technicalImplementation", score: 5 },
+            { parameter: "problemSolutionFit", score: 5 },
+            { parameter: "impactScalability", score: 4 },
+            { parameter: "userExperience", score: 5 },
+            { parameter: "designVisualAppeal", score: 5 },
+            { parameter: "presentationCommunication", score: 5 },
+            { parameter: "feasibilityPracticality", score: 5 },
+            { parameter: "collaborationTeamwork", score: 4 },
+            { parameter: "useOfTechnology", score: 5 }
+        ]
+    },
+    {
+        teamId: 8,
+        teamName: "Iota",
+        scores: [
+            { parameter: "innovationCreativity", score: 2 },
+            { parameter: "technicalImplementation", score: 3 },
+            { parameter: "problemSolutionFit", score: 2 },
+            { parameter: "impactScalability", score: 3 },
+            { parameter: "userExperience", score: 2 },
+            { parameter: "designVisualAppeal", score: 2 },
+            { parameter: "presentationCommunication", score: 3 },
+            { parameter: "feasibilityPracticality", score: 3 },
+            { parameter: "collaborationTeamwork", score: 3 },
+            { parameter: "useOfTechnology", score: 3 }
+        ]
     }
 ];
 
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
-import {
-    ChartConfig,
-    ChartContainer,
-    ChartTooltip,
-    ChartTooltipContent,
-} from "@/components/ui/chart";
+// Helper function to calculate percentile
+function calculatePercentile(value: number, allScores: number[]): { percentile: number, lowest: number } {
+    const sortedScores = [...allScores].sort((a, b) => a - b);
+    const rank = sortedScores.indexOf(value) + 1;
+    const percentile = (rank / sortedScores.length) * 100;
+    const lowest = sortedScores[0]; // Lowest score in the sorted array
+    return { percentile, lowest };
+}
 
-// Define types for individual score and team structure
-type Score = {
-    parameter: string;
-    score: number;
-};
+// Function to calculate the best and worst performing parameter and their percentiles
+function getPerformanceParameters(teamId: number) {
+    const team = AllteamScores.find((team) => team.teamId === teamId)
 
-type Team = {
-    teamId: number;
-    teamName: string;
-    scores: Score[];
-};
-type ChartData = {
-    paramters: string;
-    Team: number;
-};
-// Define the structure of average scores (record where the key is a parameter, and value is a number)
-type AverageScores = Record<string, number>;
+    if (!team) {
+        throw new Error("Team not found")
+    }
 
-// Function to calculate average scores for each parameter across all teams
+    let bestParameter = '';
+    let bestPercentile = 0;
+    let worstParameter = '';
+    let worstPercentile = 100; // Start with the highest possible percentile
 
+    team.scores.forEach((teamScore) => {
+        // Get all the scores for the current parameter across all teams
+        const allScoresForParameter = AllteamScores.map((team) => team.scores.find((score) => score.parameter === teamScore.parameter)?.score || 0
+        );
+
+        // Calculate the percentile for the current team's score
+        const { percentile, lowest } = calculatePercentile(teamScore.score, allScoresForParameter);
+
+        // Update best parameter if the current one has a higher percentile
+        if (percentile > bestPercentile) {
+            bestPercentile = percentile;
+            bestParameter = teamScore.parameter;
+        }
+
+        // Update worst parameter if the current one has a lower percentile
+        if (percentile < worstPercentile) {
+            worstPercentile = percentile;
+            worstParameter = teamScore.parameter;
+        }
+    })
+
+    return {
+        bestParameter,
+        bestPercentile,
+        worstParameter,
+        worstPercentile,
+    }
+}
+
+// Modify the function to get team scores
+function getTeamScoresByParameter(parameterName: string) {
+    return AllteamScores.map(team => {
+        const scoreEntry = team.scores.find(score => score.parameter === parameterName);
+        return {
+            teamId: team.teamId,
+            score: scoreEntry ? scoreEntry.score : null // If parameter not found, return null
+        };
+    });
+}
+
+// Modify mapToChartData to sort in increasing order
+function mapToChartData(parameterName: string) {
+    const scores = getTeamScoresByParameter(parameterName);
+    return scores
+        .map(teamScore => ({
+            teamid: teamScore.teamId,
+            score: teamScore.score || 0 // Default to 0 if score is null
+        }))
+        .sort((a, b) => a.score - b.score); // Sort in increasing order by score
+}
+
+// Example usage of the modified functions
+const { bestParameter, bestPercentile, worstParameter, worstPercentile } = getPerformanceParameters(1);
+const chartData = mapToChartData(bestParameter);
+console.log('Best Parameter:', bestParameter, 'Percentile:', bestPercentile);
+console.log('Worst Parameter:', worstParameter, 'Percentile:', worstPercentile);
+
+const chartConfig = {
+    score: {
+        label: "Score",
+        color: "#625CF966",
+    },
+} satisfies ChartConfig
 
 export function LowScoring() {
-    function calculateAverageParameterScores(teams: Team[]): AverageScores {
-        const totalScores: Record<string, number> = {};
-        const countScores: Record<string, number> = {};
-    
-        teams.forEach((team) => {
-            team.scores.forEach((scoreObj) => {
-                const { parameter, score } = scoreObj;
-                if (!totalScores[parameter]) {
-                    totalScores[parameter] = 0;
-                    countScores[parameter] = 0;
-                }
-                totalScores[parameter] += score;
-                countScores[parameter] += 1;
-            });
-        });
-    
-        // Calculate averages
-        const averageScores: AverageScores = {};
-        for (const parameter in totalScores) {
-            averageScores[parameter] = totalScores[parameter] / countScores[parameter];
-        }
-    
-        return averageScores;
-    }
-    
-    // Function to get high-scoring parameters for a specific team
-    function getHighScoringParametersForTeam(team: Team, averageScores: AverageScores): string[] {
-        const highScoringParameters: string[] = [];
-    
-        team.scores.forEach((scoreObj) => {
-            const { parameter, score } = scoreObj;
-            if (score > averageScores[parameter]) {
-                highScoringParameters.push(parameter);
-            }
-        });
-    
-        return highScoringParameters;
-    }
-    
-    // New function to get low-scoring parameters for a specific team
-    function getLowScoringParametersForTeam(team: Team, averageScores: AverageScores): string[] {
-        const lowScoringParameters: string[] = [];
-    
-        team.scores.forEach((scoreObj) => {
-            const { parameter, score } = scoreObj;
-            if (score < averageScores[parameter]) {
-                lowScoringParameters.push(parameter);
-            }
-        });
-    
-        return lowScoringParameters;
-    }
-    
-    // Function to generate chart data for high- or low-scoring parameters
-
-    
-    // The function takes team scores and high- or low-scoring parameters and returns an array of chart data
-    function getChartData(teamScores: Team, scoringParameters: string[]): ChartData[] {
-        return scoringParameters.map((param) => {
-            const scoreObj = teamScores.scores.find((s) => s.parameter === param);
-            return {
-                paramters: param,
-                Team: scoreObj ? scoreObj.score : 0
-            };
-        });
-    }
-    
-    // Example: Calculate average scores across all teams
-    const averageScores: AverageScores = calculateAverageParameterScores(AllteamScores);
-    
-    // Step 2: Find high- and low-scoring parameters for each team
-    AllteamScores.forEach((team) => {
-        const highScoringParameters: string[] = getHighScoringParametersForTeam(team, averageScores);
-        console.log(`High scoring parameters for ${team.teamName}:`, highScoringParameters);
-        
-        const lowScoringParameters: string[] = getLowScoringParametersForTeam(team, averageScores);
-        console.log(`Low scoring parameters for ${team.teamName}:`, lowScoringParameters);
-    });
-    
-    // Example of low-scoring parameters for a specific team
-    const lowScoringParameters: string[] = getLowScoringParametersForTeam(AllteamScores[0], averageScores);
-    
-    // Chart data for your team based on low-scoring parameters
-    const lowScoringChartData: ChartData[] = getChartData(AllteamScores[0], lowScoringParameters);
-    
-    // Example chart configuration
-    const chartConfig = {
-        Team: {
-            label: "Your Team (Low Scoring Parameters)",
-            color: "#625CF966", // Example color for low scoring
-        },
-    } satisfies ChartConfig;
     return (
         <Card>
             <CardHeader>
                 <CardTitle>Your Low Scoring Parameters</CardTitle>
             </CardHeader>
-            <CardContent className="bg-muted">
+            <CardContent>
                 <ChartContainer config={chartConfig}>
-                    <BarChart accessibilityLayer data={lowScoringChartData}>
+                    <BarChart accessibilityLayer data={chartData}>
                         <CartesianGrid vertical={false} />
                         <XAxis
-                            dataKey="paramters"
+                            dataKey="teamid"
                             tickLine={false}
                             tickMargin={10}
-                            axisLine={false}
-                            tickFormatter={(value) => value.slice(0, 3)}
+                            axisLine={false  }
                         />
                         <ChartTooltip
                             cursor={false}
                             content={<ChartTooltipContent hideLabel />}
                         />
-                        <Bar dataKey="Team" fill="var(--color-Team)" radius={8} />
+                        <Bar dataKey="score" fill="var(--color-score)" radius={8} />
                     </BarChart>
                 </ChartContainer>
             </CardContent>
         </Card>
-    );
+    )
 }

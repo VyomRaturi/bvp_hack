@@ -6,7 +6,6 @@ import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
 import {
     Card,
     CardContent,
-    CardDescription,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
@@ -148,7 +147,9 @@ export const AllteamScores = [
         ]
     }
 ];
+
 // Helper function to calculate percentile
+const myTeam = 1;
 function calculatePercentile(value: number, allScores: number[]): number {
     const sortedScores = [...allScores].sort((a, b) => a - b)
     const rank = sortedScores.indexOf(value) + 1
@@ -188,7 +189,7 @@ function getBestPerformingParameter(teamId: number) {
 
 
 
-function getTeamScoresByParameter(parameterName) {
+function getTeamScoresByParameter(parameterName: string) {
     return AllteamScores.map(team => {
         const scoreEntry = team.scores.find(score => score.parameter === parameterName);
         return {
@@ -197,105 +198,57 @@ function getTeamScoresByParameter(parameterName) {
         };
     });
 }
+function getBarColor(teamId: number, myTeamId: number) {
+    return teamId === myTeamId ? "green" : "#625CF966"; // Return green for your team, otherwise default color
+}
+
+
+function mapToChartData(parameterName: string) {
+    const scores = getTeamScoresByParameter(parameterName);
+    return scores
+        .map(teamScore => ({
+            teamid: teamScore.teamId,
+            score: teamScore.score || 0, // Default to 0 if score is null
+        }))
+        .sort((a, b) => b.score - a.score); // Sort in decreasing order by score
+}
+
+// Assuming myTeam is defined as your team ID
+const parameterName = getBestPerformingParameter(myTeam).bestParameter;
+const chartData = mapToChartData(parameterName);
+console.log(chartData);
+
 const chartConfig = {
-    views: {
-        label: "Page Views",
+    score: {
+        label: "Score",
+        color: "#625CF966",
     },
-    desktop: {
-        label: "Desktop",
-        color: "hsl(var(--chart-1))",
-    },
-    mobile: {
-        label: "Mobile",
-        color: "hsl(var(--chart-2))",
-    },
-} satisfies ChartConfig
+} satisfies ChartConfig;
+
+
 
 export function HighScoring() {
-    const [activeChart, setActiveChart] =
-        React.useState<keyof typeof chartConfig>("desktop")
-
-    const total = React.useMemo(
-        () => ({
-            desktop: getTeamScoresByParameter(getBestPerformingParameter.bestParameter).reduce((acc, curr) => acc + curr.score, 0),
-        }),
-        []
-    )
-
     return (
         <Card>
-            <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
-                <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
-                    <CardTitle>Bar Chart - Interactive</CardTitle>
-                    <CardDescription>
-                        Showing total visitors for the last 3 months
-                    </CardDescription>
-                </div>
-                <div className="flex">
-                    {["desktop", "mobile"].map((key) => {
-                        const chart = key as keyof typeof chartConfig
-                        return (
-                            <button
-                                key={chart}
-                                data-active={activeChart === chart}
-                                className="relative z-30 flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l data-[active=true]:bg-muted/50 sm:border-l sm:border-t-0 sm:px-8 sm:py-6"
-                                onClick={() => setActiveChart(chart)}
-                            >
-                                <span className="text-xs text-muted-foreground">
-                                    {chartConfig[chart].label}
-                                </span>
-                                <span className="text-lg font-bold leading-none sm:text-3xl">
-                                    {total[key as keyof typeof total].toLocaleString()}
-                                </span>
-                            </button>
-                        )
-                    })}
-                </div>
+            <CardHeader>
+                <CardTitle>Your High Scoring Parameters
+                </CardTitle>
             </CardHeader>
-            <CardContent className="px-2 sm:p-6">
-                <ChartContainer
-                    config={chartConfig}
-                    className="aspect-auto h-[250px] w-full"
-                >
-                    <BarChart
-                        accessibilityLayer
-                        data={chartData}
-                        margin={{
-                            left: 12,
-                            right: 12,
-                        }}
-                    >
+            <CardContent>
+                <ChartContainer config={chartConfig}>
+                    <BarChart accessibilityLayer data={chartData}>
                         <CartesianGrid vertical={false} />
                         <XAxis
-                            dataKey="date"
+                            dataKey="teamid"
                             tickLine={false}
+                            tickMargin={10}
                             axisLine={false}
-                            tickMargin={8}
-                            minTickGap={32}
-                            tickFormatter={(value) => {
-                                const date = new Date(value)
-                                return date.toLocaleDateString("en-US", {
-                                    month: "short",
-                                    day: "numeric",
-                                })
-                            }}
                         />
                         <ChartTooltip
-                            content={
-                                <ChartTooltipContent
-                                    className="w-[150px]"
-                                    nameKey="views"
-                                    labelFormatter={(value) => {
-                                        return new Date(value).toLocaleDateString("en-US", {
-                                            month: "short",
-                                            day: "numeric",
-                                            year: "numeric",
-                                        })
-                                    }}
-                                />
-                            }
+                            cursor={false}
+                            content={<ChartTooltipContent hideLabel />}
                         />
-                        <Bar dataKey={activeChart} fill={`var(--color-${activeChart})`} />
+                        <Bar dataKey="score" fill="var(--color-score)" radius={8} />
                     </BarChart>
                 </ChartContainer>
             </CardContent>

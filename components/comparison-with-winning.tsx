@@ -168,7 +168,7 @@ export function ComparisonWinning() {
         <Card>
             <CardHeader>
                 <CardTitle>Team Statistics</CardTitle>
-                <CardDescription>Mean, Mode, Median, and Your Team Average</CardDescription>
+                <CardDescription>Mean, Mode, Median, and Your Team Score</CardDescription>
             </CardHeader>
             <CardContent className="bg-muted">
                 <ChartContainer config={chartConfig}>
@@ -190,7 +190,7 @@ export function ComparisonWinning() {
                                 chartConfig[value as keyof typeof chartConfig]?.label
                             }
                         />
-                        <XAxis dataKey="value" type="number" hide />
+                        <XAxis dataKey="value" type="number"  hide />
                         <ChartTooltip
                             cursor={false}
                             content={<ChartTooltipContent hideLabel />}
