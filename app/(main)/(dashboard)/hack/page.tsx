@@ -1,4 +1,7 @@
+'use client'
 import QuestionsPreview from '@/components/hack/QuestionPreview'
+import { Button } from '@/components/ui/button'
+import { addQuestionsToHackathon } from '@/lib/actions/addQuestions'
 import React from 'react'
 
 type Props = {}
@@ -85,9 +88,17 @@ const questions = [
     }
 ]
 const QuestionPage = (props: Props) => {
+    const hackid = "67127df034775747be780171";
+    const submit = async()=>{
+        await addQuestionsToHackathon({
+            hackathonId : hackid,
+            questions
+        })
+    }
   return (
     <div>
-        <QuestionsPreview questions={questions}/>
+        {/* <QuestionsPreview questions={questions}/> */}
+        <Button onClick={()=>submit()}>Submit</Button>
     </div>
   )
 }

@@ -4,6 +4,7 @@ import { buttonVariants } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { FC } from "react";
+import LogoutButton from "../LogoutButton";
 
 export const NavBar: FC = () => {
   return (
@@ -33,6 +34,7 @@ export const NavBar: FC = () => {
                 <Link href="#3" className={buttonVariants({ variant: "link" })}>
                   Item 3
                 </Link>
+                <LogoutButton/>
               </div>
             </div>
           </div>
