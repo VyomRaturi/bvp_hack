@@ -6,7 +6,8 @@ import { IHackathon } from './Hackathon';
 export interface ITeam extends Document {
     hackathon: Types.ObjectId | IHackathon;
     name: string;
-    members: string[]; // List of member names or emails
+    members: string; // List of member names or emails
+    password : string
     createdAt: Date;
     updatedAt: Date;
 }
@@ -21,10 +22,14 @@ const teamSchema = new Schema<ITeam>({
         type: String, 
         required: true 
     },
-    members: [{ 
+    password: { 
         type: String, 
         required: true 
-    }],
+    },
+    members:{ 
+        type: String, 
+        required: true 
+    },
     createdAt: { 
         type: Date, 
         default: Date.now 

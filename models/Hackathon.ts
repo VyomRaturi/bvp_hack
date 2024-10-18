@@ -1,78 +1,33 @@
 // src/models/Hackathon.ts
 
-import { Schema, model, Document, Types } from 'mongoose';
-import { IUser } from './User';
-import { IParameter } from './Parameter';
-import { ITeam } from './Team';
+import mongoose, { Schema, Document, Model } from "mongoose";
 
 export interface IHackathon extends Document {
-    name: string;
-    description?: string;
-    startDate: Date;
-    endDate: Date;
-    organizers: Types.ObjectId[] | IUser[];
-    judges: Types.ObjectId[] | IUser[];
-    teams: Types.ObjectId[] | ITeam[];
-    parameters: Types.ObjectId[] | IParameter[];
-    isJudgingDone: boolean;
-    createdAt: Date;
-    updatedAt: Date;
+  name: string;
+  description: string;
+  startDate: Date;
+  endDate: Date;
+  judges?: mongoose.Types.ObjectId[]; // Optional
+  teams?: mongoose.Types.ObjectId[];  // Optional
+  questions?: mongoose.Types.ObjectId[]; // Optional
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-const hackathonSchema = new Schema<IHackathon>({
-    name: {
-        type: String,
-        required: true
-    },
-    description: {
-        type: String
-    },
-    startDate: {
-        type: Date,
-        required: true
-    },
-    endDate: {
-        type: Date,
-        required: true
-    },
-    organizers: [{
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
-    }],
-    judges: [{
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
-    }],
-    teams: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Team'
-    }],
-    parameters: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Parameter'
-    }],
-    isJudgingDone: {
-        type: Boolean,
-        default: false
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
-    updatedAt: {
-        type: Date,
-        default: Date.now
-    }
-});
+const HackathonSchema: Schema<IHackathon> = new Schema(
+  {
+    name: { type: String, required: true, trim: true },
+    description: { type: String, required: true },
+    startDate: { type: Date, required: true },
+    endDate: { type: Date, required: true },
+    judges: [{ type: Schema.Types.ObjectId, ref: "User" }], // Optional by default
+    teams: [{ type: Schema.Types.ObjectId, ref: "Team" }],  // Optional by default
+    questions: [{ type: Schema.Types.ObjectId, ref: "Question" }], // Optional by default
+  },
+  { timestamps: true }
+);
 
-// Pre-save hook to update updatedAt
-hackathonSchema.pre<IHackathon>('save', function (next) {
-    this.updatedAt = new Date();
-    next();
-});
-
-const Hackathon = model<IHackathon>('Hackathon', hackathonSchema);
+const Hackathon: Model<IHackathon> =
+  mongoose.models.Hackathon || mongoose.model<IHackathon>("Hackathon", HackathonSchema);
 
 export default Hackathon;
