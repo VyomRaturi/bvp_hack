@@ -1,3 +1,4 @@
+'use client'
 import { FC } from "react";
 import Image from "next/image";
 import { MainNav } from "@/components/demo-dashboard/main-nav";
@@ -9,8 +10,12 @@ import {
   CardContent,
   CardDescription,
 } from "@/components/ui/card";
+import { useUser } from "@/context/UserContext";
 
 export const DemoDashboard: FC = () => {
+
+  const {user} = useUser();
+  console.log(user);
   return (
     <>
       <div className="md:hidden">

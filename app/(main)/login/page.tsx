@@ -1,18 +1,37 @@
-// import { AuthCard } from "@/components/auth-card";
-// import { ProviderLoginButtons } from "@/components/auth/provider-login-buttons";
-import { OrSeparator } from "@/components/ui/or-separator";
+// src/app/login/page.tsx
 
-export default function LoginPage() {
+"use client";
+
+import React from "react";
+import { SignInForm } from "@/components/SignInForm"; // Ensure the path is correct
+import { useRouter } from "next/navigation";
+import { useUser } from "@/context/UserContext"; // Ensure the path is correct
+import { useEffect } from "react";
+import { toast } from "@/components/ui/use-toast"; // Ensure the path is correct
+
+const LoginPage = () => {
+  const router = useRouter();
+  const { user, loading } = useUser();
+
+  useEffect(() => {
+    if (!loading && user) {
+      // Redirect authenticated users to the dashboard or desired page
+      router.push("/dashboard");
+      toast({
+        title: "Already Logged In",
+        description: "You are already logged in.",
+      });
+    }
+  }, [user, loading, router]);
+
   return (
-    <div className="grow flex flex-col items-center justify-center">
-      <section className="w-[32rem] space-y-4">
-        <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">
-          Login Example
-        </h1>
-        {/* <AuthCard /> */}
-        {/* <OrSeparator />
-        <ProviderLoginButtons /> */}
-      </section>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="w-full max-w-md p-8 space-y-4 bg-white rounded shadow">
+        <h2 className="text-2xl font-bold text-center">Login</h2>
+        <SignInForm />
+      </div>
     </div>
   );
-}
+};
+
+export default LoginPage;

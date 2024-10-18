@@ -1,12 +1,15 @@
 // src/models/Team.ts
 
-import { Schema, model, Document, Types } from 'mongoose';
+import { Schema, model, Document, Types, Model } from 'mongoose';
 import { IHackathon } from './Hackathon';
+import mongoose from 'mongoose';
 
 export interface ITeam extends Document {
     hackathon: Types.ObjectId | IHackathon;
     name: string;
-    members: string[]; // List of member names or emails
+    email : string;
+    members: string; // List of member names or emails
+    password : string
     createdAt: Date;
     updatedAt: Date;
 }
@@ -21,10 +24,18 @@ const teamSchema = new Schema<ITeam>({
         type: String, 
         required: true 
     },
-    members: [{ 
+    email: { 
         type: String, 
         required: true 
-    }],
+    },
+    password: { 
+        type: String, 
+        required: true 
+    },
+    members:{ 
+        type: String, 
+        required: true 
+    },
     createdAt: { 
         type: Date, 
         default: Date.now 
@@ -41,6 +52,7 @@ teamSchema.pre<ITeam>('save', function(next) {
     next();
 });
 
-const Team = model<ITeam>('Team', teamSchema);
+const Team: Model<ITeam> = 
+  mongoose.models.Team || mongoose.model<ITeam>("Team", teamSchema);
 
 export default Team;
