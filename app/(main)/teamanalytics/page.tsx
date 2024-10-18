@@ -1,5 +1,7 @@
 
 import { ComparisonWinning } from '@/components/comparison-with-winning';
+import  {HighScoring} from '@/components/high-scoring';
+import { LowScoring } from '@/components/low-scoring';
 import React from 'react'
 
 type Props = {}
@@ -104,21 +106,16 @@ function getTeamRank(teamId: number) {
 }
 const MyTeamAnalytics = (props: Props) => {
     return (
-        <div>
-            <div className='flex  gap-4 justify-center'>
-                <div className='bg-muted rounded-3xl w-[40%] px-8 flex items-center justify-center'>
-                    <h1 className='font-bold px-4 py-2 text-6xl'>Your Rank: #{getTeamRank(3)}</h1>
-                    {/* <Chartui /> */}
-                </div>
+        <div className=' h-screen relative'>
+            <div className='bg-muted rounded-3xl flex items-center justify-center flex-col absolute'>
+                <h1 className='font-bold px-4 py-2 text-4xl '>#{getTeamRank(3)}/{AllteamScores.length}</h1>
+                <h1 className='font-bold px-4 py-2 '>Your Rank </h1>
+            </div>
+            <div className='grid grid-cols-1 grid-rows-4 gap-2 mx-auto my-auto w-fit h-fit justify-center max-w-screen-md max-h-screen-md'>
+
                 <ComparisonWinning />
-                {/* <div className='bg-muted rounded-3xl px-6 py-4 h-[40%] flex flex-col items-center justify-center'>
-                        <h1 className='text-primary font-bold text-6xl'>$75,000</h1>
-                        <p className='font-bold'>Dawdle Revenue</p>
-                    </div>
-                    <div className='bg-muted rounded-3xl px-6 py-4 h-[40%] flex flex-col items-center justify-center'>
-                        <h1 className='text-primary font-bold text-6xl'>$40,000</h1>
-                        <p className='font-bold'>Consultant Earnings</p>
-                    </div> */}
+                <HighScoring />
+                <LowScoring />
             </div>
         </div>
     )
