@@ -69,7 +69,7 @@ export function HighScoring({AllteamScores} : {AllteamScores : TeamData[]}) {
     
         // Calculate the percentile for the current team's score
         const percentile = calculatePercentile(teamScore.score, allScoresForParameter);
-        console.log(teamScore.parameter,percentile)
+        // console.log(teamScore.parameter,percentile)
     
         // Update best parameter if the current one has a higher percentile
         if (percentile > bestPercentile) {
