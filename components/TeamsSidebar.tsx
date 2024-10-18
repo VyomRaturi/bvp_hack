@@ -24,6 +24,7 @@ interface TeamsSidebarProps {
   const router = useRouter();
   const pathname = usePathname();
   const [loading, setLoading] = useState<boolean>(true);
+  const curTeamId = pathname.split("/")[2];
 
 
   useEffect(() => {
@@ -45,6 +46,11 @@ interface TeamsSidebarProps {
     };
 
     fetchTeams();
+    if (curTeamId){
+      const curTeamIndex = teams.findIndex((team) => team.id === curTeamId);
+      if (curTeamIndex!=-1 && curTeamIndex<teams.length-1)
+      router.push(`/teams/${teams[curTeamIndex+1].id}`);
+    }
   }, [refreshTrigger]);
 
 

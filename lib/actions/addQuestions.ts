@@ -85,6 +85,12 @@ export const addQuestionsToHackathon = async (
     throw new Error("Hackathon not found.");
   }
 
+  if (hackathon.questions && hackathon.questions.length > 0) {
+    console.log(`Deleting ${hackathon.questions.length} existing questions.`);
+    await Question.deleteMany({ _id: { $in: hackathon.questions } });
+    hackathon.questions = []; // Clear existing questions
+  }
+
   const createdQuestions: CreatedQuestion[] = [];
 
   // Create each question and associate with hackathon
@@ -93,14 +99,18 @@ export const addQuestionsToHackathon = async (
       question: q.question,
       parameter: q.parameter,
       ans: q.ans,
-      hackathon: hackathonObjectId,
+      // hackathon: hackathonObjectId,
     });
 
+    const questionObj = newQuestion.toObject({ getters: true, virtuals: false });
     createdQuestions.push({
-      _id: newQuestion._id?.toString() ?? "",
-      question: newQuestion.question,
-      parameter: newQuestion.parameter,
-      ans: newQuestion.ans,
+      _id: questionObj._id?.toString() ?? "",
+      question: questionObj.question,
+      parameter: questionObj.parameter,
+      ans: questionObj.ans.map((ans: any) => ({
+        answer: ans.answer,
+        score: ans.score,
+      })),
     });
 
     if (!hackathon.questions) {
