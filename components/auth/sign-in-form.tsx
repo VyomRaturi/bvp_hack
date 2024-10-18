@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "reactfire";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { ModalForgotPassword } from "@/components/auth/modal-forgot-password";
+// import { ModalForgotPassword } from "@/components/auth/modal-forgot-password";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -105,7 +105,7 @@ export const SignInForm: FC<SignInFormProps> = ({ onShowSignUp }) => {
           Sign up instead.
         </Button>
       </p>
-      <ModalForgotPassword isOpen={isResetOpen} setIsOpen={setIsResetOpen} />
+      {/* <ModalForgotPassword isOpen={isResetOpen} setIsOpen={setIsResetOpen} /> */}
     </>
   );
 };
