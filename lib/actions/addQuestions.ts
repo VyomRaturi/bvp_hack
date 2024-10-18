@@ -34,6 +34,7 @@ export const addQuestionsToHackathon = async (payload: AddQuestionsPayload): Pro
     const { hackathonId, questions } = payload;
 
     // Input validation
+    console.log(payload);
     if (!hackathonId || typeof hackathonId !== "string") {
         throw new Error("Invalid hackathonId provided.");
     }
@@ -102,7 +103,7 @@ export const addQuestionsToHackathon = async (payload: AddQuestionsPayload): Pro
             throw new Error("New question ID is missing.");
         }
     }
-
+    console.log(hackathon);
     // Save hackathon with new questions
     await hackathon.save();
 
