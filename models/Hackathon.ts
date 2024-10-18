@@ -20,55 +20,55 @@ export interface IHackathon extends Document {
 }
 
 const hackathonSchema = new Schema<IHackathon>({
-    name: { 
-        type: String, 
-        required: true 
+    name: {
+        type: String,
+        required: true
     },
-    description: { 
-        type: String 
+    description: {
+        type: String
     },
-    startDate: { 
-        type: Date, 
-        required: true 
+    startDate: {
+        type: Date,
+        required: true
     },
-    endDate: { 
-        type: Date, 
-        required: true 
+    endDate: {
+        type: Date,
+        required: true
     },
-    organizers: [{ 
-        type: Schema.Types.ObjectId, 
+    organizers: [{
+        type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
     }],
-    judges: [{ 
-        type: Schema.Types.ObjectId, 
+    judges: [{
+        type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
     }],
-    teams: [{ 
-        type: Schema.Types.ObjectId, 
+    teams: [{
+        type: Schema.Types.ObjectId,
         ref: 'Team'
     }],
-    parameters: [{ 
-        type: Schema.Types.ObjectId, 
+    parameters: [{
+        type: Schema.Types.ObjectId,
         ref: 'Parameter'
     }],
-    isJudgingDone: { 
-        type: Boolean, 
-        default: false 
+    isJudgingDone: {
+        type: Boolean,
+        default: false
     },
-    createdAt: { 
-        type: Date, 
-        default: Date.now 
+    createdAt: {
+        type: Date,
+        default: Date.now
     },
-    updatedAt: { 
-        type: Date, 
-        default: Date.now 
+    updatedAt: {
+        type: Date,
+        default: Date.now
     }
 });
 
 // Pre-save hook to update updatedAt
-hackathonSchema.pre<IHackathon>('save', function(next) {
+hackathonSchema.pre<IHackathon>('save', function (next) {
     this.updatedAt = new Date();
     next();
 });

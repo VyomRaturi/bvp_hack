@@ -1,27 +1,33 @@
+// src/lib/actions/getUser.ts
+
 "use server";
 
-import { verifyToken } from "@/lib/auth"; // Utility to verify JWT
+import { verifyToken, AuthPayload } from "@/lib/auth"; // JWT verification utility
 import User from "@/models/User";
 import connectDB from "@/lib/mongodb";
-import { NextRequest } from "next/server";
+import { cookies } from "next/headers";
 
 export const getUserFromServer = async () => {
   try {
     await connectDB();
 
-    // Get the token from the cookies
-    const headers = new Headers();
-    headers.append('cookie', document.cookie || '');
-    
-    const mockRequest = new Request('http://localhost', {
-      headers,
-    });
+    // Access cookies using Next.js 'cookies' helper
+    const cookieStore = cookies();
+    const token = cookieStore.get("token")?.value;
 
-    const authPayload = verifyToken(mockRequest as NextRequest);
-    if (!authPayload) {
+    if (!token) {
+      // No token found, user is not authenticated
       return null;
     }
 
+    // Verify the JWT token
+    const authPayload: AuthPayload | null = verifyToken(token);
+    if (!authPayload) {
+      // Invalid token
+      return null;
+    }
+
+    // Fetch the user from the database
     const user = await User.findById(authPayload.userId).select("email role");
     return user ? { email: user.email, role: user.role } : null;
   } catch (error) {
