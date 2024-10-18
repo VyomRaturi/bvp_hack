@@ -2,7 +2,13 @@
 
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 import { getUserFromServer } from "@/lib/actions/getUser"; // Server action to fetch user
 import { useRouter } from "next/navigation";
 
