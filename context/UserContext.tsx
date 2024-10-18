@@ -1,33 +1,36 @@
+// src/context/UserContext.tsx
+
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { useRouter } from "next/navigation";
 import { getUserFromServer } from "@/lib/actions/getUser"; // Server action to fetch user
+import { useRouter } from "next/navigation";
+
+interface User {
+  email: string;
+  role: string;
+}
 
 interface UserContextType {
-  user: { email: string; role: string } | null;
+  user: User | null;
   loading: boolean;
-  fetchUser: () => Promise<void>;
+  refreshUser: () => Promise<void>;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<{ email: string; role: string } | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
 
-  const fetchUser = async () => {
+  const refreshUser = async () => {
     setLoading(true);
     try {
-      const user = await getUserFromServer();
-      if (user) {
-        setUser(user);
-      } else {
-        setUser(null);
-      }
+      const fetchedUser = await getUserFromServer();
+      setUser(fetchedUser);
     } catch (error) {
-      console.error("Error fetching user:", error);
+      console.error("Error refreshing user:", error);
       setUser(null);
     } finally {
       setLoading(false);
@@ -35,17 +38,24 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
+    // Only attempt to fetch user if token exists in cookies
+    const fetchUser = async () => {
+      // Since 'getUserFromServer' handles token presence,
+      // we can directly call it
+      await refreshUser();
+    };
+
     fetchUser();
   }, [router]);
 
   return (
-    <UserContext.Provider value={{ user, loading, fetchUser }}>
+    <UserContext.Provider value={{ user, loading, refreshUser }}>
       {children}
     </UserContext.Provider>
   );
 };
 
-// Custom hook to access user context
+// Custom hook to use the UserContext
 export const useUser = () => {
   const context = useContext(UserContext);
   if (!context) {

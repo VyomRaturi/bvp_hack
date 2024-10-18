@@ -1,5 +1,5 @@
-import { AuthCard } from "@/components/auth-card";
-import { ProviderLoginButtons } from "@/components/auth/provider-login-buttons";
+// import { AuthCard } from "@/components/auth-card";
+// import { ProviderLoginButtons } from "@/components/auth/provider-login-buttons";
 import { OrSeparator } from "@/components/ui/or-separator";
 
 export default function LoginPage() {
@@ -9,7 +9,7 @@ export default function LoginPage() {
         <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">
           Login Example
         </h1>
-        <AuthCard />
+        {/* <AuthCard /> */}
         {/* <OrSeparator />
         <ProviderLoginButtons /> */}
       </section>

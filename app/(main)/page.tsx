@@ -32,7 +32,7 @@ export default function Home() {
                 <span className="font-bold">sh</span>adcn/ui
               </p>
             </Badge>
-            <h1 className="max-w-4xl font-heading font-semibold text-3xl sm:text-5xl md:text-6xl lg:text-7xl tracking-tighter">
+            <h1 className="max-w-4xl bg-red-200 font-heading font-semibold text-3xl sm:text-5xl md:text-6xl lg:text-7xl tracking-tighter">
               Quickly start building your next billion dollar app.
             </h1>
             <p className="max-w-2xl leading-normal text-muted-foreground sm:text-xl sm:leading-8">

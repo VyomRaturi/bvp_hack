@@ -1,31 +1,37 @@
-"use server";
+// // src/lib/actions/getUser.ts
 
-import { verifyToken } from "@/lib/auth"; // Utility to verify JWT
-import User from "@/models/User";
-import connectDB from "@/lib/mongodb";
-import { NextRequest } from "next/server";
+// "use server";
 
-export const getUserFromServer = async () => {
-  try {
-    await connectDB();
+// import { verifyToken, AuthPayload } from "@/lib/auth"; // JWT verification utility
+// import User from "@/models/User";
+// import connectDB from "@/lib/mongodb";
+// import { cookies } from "next/headers";
 
-    // Get the token from the cookies
-    const headers = new Headers();
-    headers.append('cookie', document.cookie || '');
-    
-    const mockRequest = new Request('http://localhost', {
-      headers,
-    });
+// export const getUserFromServer = async () => {
+//   try {
+//     await connectDB();
 
-    const authPayload = verifyToken(mockRequest as NextRequest);
-    if (!authPayload) {
-      return null;
-    }
+//     // Access cookies using Next.js 'cookies' helper
+//     const cookieStore = cookies();
+//     const token = cookieStore.get("token")?.value;
 
-    const user = await User.findById(authPayload.userId).select("email role");
-    return user ? { email: user.email, role: user.role } : null;
-  } catch (error) {
-    console.error("Error fetching user:", error);
-    return null;
-  }
-};
+//     if (!token) {
+//       // No token found, user is not authenticated
+//       return null;
+//     }
+
+//     // Verify the JWT token
+//     const authPayload: AuthPayload | null = verifyToken(token);
+//     if (!authPayload) {
+//       // Invalid token
+//       return null;
+//     }
+
+//     // Fetch the user from the database
+//     const user = await User.findById(authPayload.userId).select("email role");
+//     return user ? { email: user.email, role: user.role } : null;
+//   } catch (error) {
+//     console.error("Error fetching user:", error);
+//     return null;
+//   }
+// };

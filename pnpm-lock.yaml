@@ -4,131 +4,129 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-importers:
+dependencies:
+  '@hookform/resolvers':
+    specifier: ^3.3.4
+    version: 3.9.0(react-hook-form@7.53.0)
+  '@radix-ui/react-avatar':
+    specifier: ^1.0.4
+    version: 1.1.1(@types/react-dom@18.3.1)(@types/react@18.3.11)(react-dom@18.3.1)(react@18.3.1)
+  '@radix-ui/react-dialog':
+    specifier: ^1.0.5
+    version: 1.1.2(@types/react-dom@18.3.1)(@types/react@18.3.11)(react-dom@18.3.1)(react@18.3.1)
+  '@radix-ui/react-dropdown-menu':
+    specifier: ^2.0.6
+    version: 2.1.2(@types/react-dom@18.3.1)(@types/react@18.3.11)(react-dom@18.3.1)(react@18.3.1)
+  '@radix-ui/react-icons':
+    specifier: ^1.3.0
+    version: 1.3.0(react@18.3.1)
+  '@radix-ui/react-label':
+    specifier: ^2.0.2
+    version: 2.1.0(@types/react-dom@18.3.1)(@types/react@18.3.11)(react-dom@18.3.1)(react@18.3.1)
+  '@radix-ui/react-navigation-menu':
+    specifier: ^1.1.4
+    version: 1.2.1(@types/react-dom@18.3.1)(@types/react@18.3.11)(react-dom@18.3.1)(react@18.3.1)
+  '@radix-ui/react-separator':
+    specifier: ^1.0.3
+    version: 1.1.0(@types/react-dom@18.3.1)(@types/react@18.3.11)(react-dom@18.3.1)(react@18.3.1)
+  '@radix-ui/react-slot':
+    specifier: ^1.0.2
+    version: 1.1.0(@types/react@18.3.11)(react@18.3.1)
+  '@radix-ui/react-tabs':
+    specifier: ^1.0.4
+    version: 1.1.1(@types/react-dom@18.3.1)(@types/react@18.3.11)(react-dom@18.3.1)(react@18.3.1)
+  '@radix-ui/react-toast':
+    specifier: ^1.1.5
+    version: 1.2.2(@types/react-dom@18.3.1)(@types/react@18.3.11)(react-dom@18.3.1)(react@18.3.1)
+  bcrypt:
+    specifier: ^5.1.1
+    version: 5.1.1(encoding@0.1.13)
+  class-variance-authority:
+    specifier: ^0.7.0
+    version: 0.7.0
+  clsx:
+    specifier: ^2.0.0
+    version: 2.1.1
+  cookie:
+    specifier: ^1.0.1
+    version: 1.0.1
+  encoding:
+    specifier: ^0.1.13
+    version: 0.1.13
+  firebase:
+    specifier: ^9.23.0
+    version: 9.23.0(encoding@0.1.13)
+  firebase-admin:
+    specifier: ^12.6.0
+    version: 12.6.0(encoding@0.1.13)
+  jsonwebtoken:
+    specifier: ^9.0.2
+    version: 9.0.2
+  lucide-react:
+    specifier: ^0.284.0
+    version: 0.284.0(react@18.3.1)
+  mongoose:
+    specifier: ^8.7.2
+    version: 8.7.2
+  next:
+    specifier: latest
+    version: 14.2.15(react-dom@18.3.1)(react@18.3.1)
+  react:
+    specifier: latest
+    version: 18.3.1
+  react-dom:
+    specifier: latest
+    version: 18.3.1(react@18.3.1)
+  react-hook-form:
+    specifier: ^7.50.1
+    version: 7.53.0(react@18.3.1)
+  reactfire:
+    specifier: ^4.2.3
+    version: 4.2.3(firebase@9.23.0)(react@18.3.1)
+  tailwind-merge:
+    specifier: ^1.14.0
+    version: 1.14.0
+  tailwindcss-animate:
+    specifier: ^1.0.7
+    version: 1.0.7(tailwindcss@3.4.14)
+  zod:
+    specifier: ^3.22.4
+    version: 3.23.8
 
-  .:
-    dependencies:
-      '@hookform/resolvers':
-        specifier: ^3.3.4
-        version: 3.9.0(react-hook-form@7.53.0)
-      '@radix-ui/react-avatar':
-        specifier: ^1.0.4
-        version: 1.1.1(@types/react-dom@18.3.1)(@types/react@18.3.11)(react-dom@18.3.1)(react@18.3.1)
-      '@radix-ui/react-dialog':
-        specifier: ^1.0.5
-        version: 1.1.2(@types/react-dom@18.3.1)(@types/react@18.3.11)(react-dom@18.3.1)(react@18.3.1)
-      '@radix-ui/react-dropdown-menu':
-        specifier: ^2.0.6
-        version: 2.1.2(@types/react-dom@18.3.1)(@types/react@18.3.11)(react-dom@18.3.1)(react@18.3.1)
-      '@radix-ui/react-icons':
-        specifier: ^1.3.0
-        version: 1.3.0(react@18.3.1)
-      '@radix-ui/react-label':
-        specifier: ^2.0.2
-        version: 2.1.0(@types/react-dom@18.3.1)(@types/react@18.3.11)(react-dom@18.3.1)(react@18.3.1)
-      '@radix-ui/react-navigation-menu':
-        specifier: ^1.1.4
-        version: 1.2.1(@types/react-dom@18.3.1)(@types/react@18.3.11)(react-dom@18.3.1)(react@18.3.1)
-      '@radix-ui/react-separator':
-        specifier: ^1.0.3
-        version: 1.1.0(@types/react-dom@18.3.1)(@types/react@18.3.11)(react-dom@18.3.1)(react@18.3.1)
-      '@radix-ui/react-slot':
-        specifier: ^1.0.2
-        version: 1.1.0(@types/react@18.3.11)(react@18.3.1)
-      '@radix-ui/react-tabs':
-        specifier: ^1.0.4
-        version: 1.1.1(@types/react-dom@18.3.1)(@types/react@18.3.11)(react-dom@18.3.1)(react@18.3.1)
-      '@radix-ui/react-toast':
-        specifier: ^1.1.5
-        version: 1.2.2(@types/react-dom@18.3.1)(@types/react@18.3.11)(react-dom@18.3.1)(react@18.3.1)
-      bcrypt:
-        specifier: ^5.1.1
-        version: 5.1.1(encoding@0.1.13)
-      class-variance-authority:
-        specifier: ^0.7.0
-        version: 0.7.0
-      clsx:
-        specifier: ^2.0.0
-        version: 2.1.1
-      cookie:
-        specifier: ^1.0.1
-        version: 1.0.1
-      encoding:
-        specifier: ^0.1.13
-        version: 0.1.13
-      firebase:
-        specifier: ^9.23.0
-        version: 9.23.0(encoding@0.1.13)
-      firebase-admin:
-        specifier: ^12.6.0
-        version: 12.6.0(encoding@0.1.13)
-      jsonwebtoken:
-        specifier: ^9.0.2
-        version: 9.0.2
-      lucide-react:
-        specifier: ^0.284.0
-        version: 0.284.0(react@18.3.1)
-      mongoose:
-        specifier: ^8.7.2
-        version: 8.7.2
-      next:
-        specifier: latest
-        version: 14.2.15(react-dom@18.3.1)(react@18.3.1)
-      react:
-        specifier: latest
-        version: 18.3.1
-      react-dom:
-        specifier: latest
-        version: 18.3.1(react@18.3.1)
-      react-hook-form:
-        specifier: ^7.50.1
-        version: 7.53.0(react@18.3.1)
-      reactfire:
-        specifier: ^4.2.3
-        version: 4.2.3(firebase@9.23.0)(react@18.3.1)
-      tailwind-merge:
-        specifier: ^1.14.0
-        version: 1.14.0
-      tailwindcss-animate:
-        specifier: ^1.0.7
-        version: 1.0.7(tailwindcss@3.4.14)
-      zod:
-        specifier: ^3.22.4
-        version: 3.23.8
-    devDependencies:
-      '@faker-js/faker':
-        specifier: ^8.4.1
-        version: 8.4.1
-      '@types/bcrypt':
-        specifier: ^5.0.2
-        version: 5.0.2
-      '@types/jsonwebtoken':
-        specifier: ^9.0.7
-        version: 9.0.7
-      '@types/mongoose':
-        specifier: ^5.11.96
-        version: 5.11.97
-      '@types/node':
-        specifier: latest
-        version: 22.7.6
-      '@types/react':
-        specifier: latest
-        version: 18.3.11
-      '@types/react-dom':
-        specifier: latest
-        version: 18.3.1
-      autoprefixer:
-        specifier: latest
-        version: 10.4.20(postcss@8.4.47)
-      postcss:
-        specifier: latest
-        version: 8.4.47
-      tailwindcss:
-        specifier: latest
-        version: 3.4.14
-      typescript:
-        specifier: latest
-        version: 5.6.3
+devDependencies:
+  '@faker-js/faker':
+    specifier: ^8.4.1
+    version: 8.4.1
+  '@types/bcrypt':
+    specifier: ^5.0.2
+    version: 5.0.2
+  '@types/jsonwebtoken':
+    specifier: ^9.0.7
+    version: 9.0.7
+  '@types/mongoose':
+    specifier: ^5.11.96
+    version: 5.11.97
+  '@types/node':
+    specifier: latest
+    version: 22.7.6
+  '@types/react':
+    specifier: latest
+    version: 18.3.11
+  '@types/react-dom':
+    specifier: latest
+    version: 18.3.1
+  autoprefixer:
+    specifier: ^10.4.20
+    version: 10.4.20(postcss@8.4.47)
+  postcss:
+    specifier: ^8.4.47
+    version: 8.4.47
+  tailwindcss:
+    specifier: ^3.4.14
+    version: 3.4.14
+  typescript:
+    specifier: latest
+    version: 5.6.3
 
 packages:
 
@@ -4037,7 +4035,9 @@ snapshots:
 
   object-assign@4.1.1: {}
 
-  object-hash@3.0.0: {}
+  /object-hash@3.0.0:
+    resolution: {integrity: sha512-RSn9F68PjH9HqtltsSnqYC1XXoWe9Bju5+213R98cNGttag9q9yAOTzdbsqvIa7aNm5WffBZFpWYr2aWrklWAw==}
+    engines: {node: '>= 6'}
 
   once@1.4.0:
     dependencies:
