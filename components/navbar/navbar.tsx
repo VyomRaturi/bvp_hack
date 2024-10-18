@@ -31,12 +31,6 @@ export const NavBar: FC = () => {
                   Item 3
                 </Link>
               </div>
-              <div className="flex items-center space-x-4">
-                <NavbarUserLinks />
-              </div>
-            </div>
-            <div className="grow md:hidden flex justify-end">
-              <NavbarMobile />
             </div>
           </div>
         </nav>
