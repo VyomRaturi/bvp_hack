@@ -1,10 +1,20 @@
-
+'use client'
 import { ComparisonWinning } from '@/components/comparison-with-winning';
-import  {HighScoring} from '@/components/high-scoring';
+import { HighScoring } from '@/components/high-scoring';
 import { LowScoring } from '@/components/low-scoring';
 import React from 'react'
 
 type Props = {}
+interface TeamScore {
+    parameter: string;
+    score: number;
+}
+
+export interface TeamData {
+    teamId: number;
+    teamName: string;
+    scores: TeamScore[];
+}
 
 
 export const IndividualTeamScores = [
@@ -176,10 +186,6 @@ const rankedTeams = teamAverages.map((team, index) => ({
     teamName: team.teamName,
     rank: index + 1
 }));
-
-// Output the ranked teams
-// console.log(rankedTeams);
-
 function getTeamRank(teamId: number) {
     const team = rankedTeams.find(t => t.teamId === teamId);
     return team ? team.rank : "Team not found";
@@ -194,8 +200,8 @@ const MyTeamAnalytics = (props: Props) => {
             <div className='grid grid-cols-1 grid-rows-4 gap-2 mx-auto my-auto w-fit h-fit justify-center max-w-screen-md max-h-screen-md'>
 
                 <ComparisonWinning />
-                <HighScoring />
-                <LowScoring />
+                <HighScoring AllteamScores={AllteamScores} />
+                <LowScoring AllteamScores={AllteamScores} />
             </div>
         </div>
     )
