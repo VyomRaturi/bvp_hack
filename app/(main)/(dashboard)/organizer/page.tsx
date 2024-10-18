@@ -25,22 +25,21 @@ interface JudgeInput {
 
 interface TeamInput {
   name: string;
+  email: string; // New email field for TeamInput
   members: string[];
 }
 
-const steps = [
-  "Hack-a-thon Details",
-  "Create Judges",
-  "Add Teams",
-  "Travel Type",
-  "Key Interests",
-  "Travel Companions",
-];
+const steps = ["Hack-a-thon Details", "Create Judges", "Add Teams"];
 
-export default function TravelForm() {
+export default function OrganiserForm() {
   const [loading, setLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    hackName: "",
+    hackDesc: "",
+    start: "",
+    end: "",
+  });
   const [judges, setJudges] = useState<JudgeInput[]>([]);
   const [teams, setTeams] = useState<TeamInput[]>([]);
   const [judgeFile, setJudgeFile] = useState<File | null>(null); // State for uploaded judge file
@@ -50,7 +49,34 @@ export default function TravelForm() {
     if (currentStep < steps.length - 1) {
       setCurrentStep((prev) => prev + 1);
     } else {
-      console.log("done");
+      // Final step, submit the form data
+      const data = {
+        ...formData,
+        judges,
+        teams: teams.map((team) => ({
+          ...team,
+          members: team.members.join(", "), // Convert members array to comma-separated string
+        })),
+      };
+
+      try {
+        const response = await fetch("/api/hackathon/create", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          console.log("Hackathon created successfully:", result);
+        } else {
+          console.error("Failed to create hackathon:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error creating hackathon:", error);
+      }
     }
   };
 
@@ -103,7 +129,8 @@ export default function TravelForm() {
           .slice(1) // Skip the header row
           .map((row: any) => ({
             name: row[0],
-            members: row[1] ? row[1].split(",") : [],
+            email: row[1], // Capture email from the file
+            members: row[2] ? row[2].split(",") : [],
           }));
 
         setTeams(teamsData);
@@ -114,39 +141,65 @@ export default function TravelForm() {
     }
   };
 
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [id]: value,
+    }));
+  };
+
   const renderStep = () => {
     switch (currentStep) {
       case 0:
         return (
           <div className="h-full space-y-4">
             <div>
-              <Label className="font-medium text-lg" htmlFor="hackathon-name">
+              <Label className="font-medium" htmlFor="hackName">
                 Name Your Hack-a-Thon
               </Label>
               <Input
-                id="hackathon-name"
+                id="hackName"
                 className="text-2xl my-1"
                 type="text"
+                value={formData.hackName}
+                onChange={handleInputChange}
               />
             </div>
 
             <div>
-              <Label className="font-medium text-lg" htmlFor="description">
+              <Label className="font-medium" htmlFor="hackDesc">
                 Description
               </Label>
-              <Textarea id="description" className="my-1" />
+              <Textarea
+                id="hackDesc"
+                className="my-1"
+                value={formData.hackDesc}
+                onChange={handleInputChange}
+              />
             </div>
 
             <div>
-              <Label className="font-medium text-lg">Timeline</Label>
               <div className="flex space-x-4">
                 <div className="w-full">
-                  <Label htmlFor="start-date">Start Date</Label>
-                  <Input id="start-date" type="date" />
+                  <Label htmlFor="start">Start Date</Label>
+                  <Input
+                    id="start"
+                    type="date"
+                    value={formData.start}
+                    onChange={handleInputChange}
+                  />
                 </div>
                 <div className="w-full">
-                  <Label htmlFor="end-date">End Date</Label>
-                  <Input id="end-date" type="date" />
+                  <Label htmlFor="end">End Date</Label>
+                  <Input
+                    id="end"
+                    type="date"
+                    value={formData.end}
+                    onChange={handleInputChange}
+                  />
                 </div>
               </div>
             </div>
@@ -211,7 +264,7 @@ export default function TravelForm() {
               <ul>
                 {teams.map((team, index) => (
                   <li key={index}>
-                    {index + 1}. {team.name} - Members:{" "}
+                    {index + 1}. {team.name} - Email: {team.email} - Members:{" "}
                     {team.members.join(", ")}
                   </li>
                 ))}
@@ -219,10 +272,6 @@ export default function TravelForm() {
             </div>
           </div>
         );
-      case 3:
-        return <div>step3</div>;
-      case 4:
-        return <div>step4</div>;
       default:
         return null;
     }
@@ -239,7 +288,7 @@ export default function TravelForm() {
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
-            <div className="grid grid-cols-6 gap-2">
+            <div className="grid grid-cols-3 gap-2">
               {steps.map((step, index) => (
                 <div key={step} className="space-y-2">
                   <Progress
@@ -249,7 +298,7 @@ export default function TravelForm() {
                 </div>
               ))}
             </div>
-            <div className="pt-4 min-h-[300px]">
+            <div className="pt-4 min-h-[350px]">
               <h3 className="text-2xl font-medium mb-4">
                 {steps[currentStep]}
               </h3>
