@@ -51,9 +51,9 @@ const TeamPage: React.FC<TeamPageProps> = ({ params }) => {
   }
 
   return (
-    <div className="flex bg-green-300 w-full">
+    <div className="flex bg-green-300 w-full max-h-[90vh]">
       {/* Sidebar */}
-      <div className="w-1/3 bg-gray-800 text-white p-4">
+      <div className="w-1/3 bg-gray-800 text-white p-4 overflow-auto">
         <TeamsSidebar refreshTrigger={refreshTrigger} />
       </div>
       {/* Main Content */}

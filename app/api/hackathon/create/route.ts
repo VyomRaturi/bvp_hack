@@ -170,6 +170,7 @@ export async function POST(request: NextRequest) {
     // Return the Outputs
     return NextResponse.json(
       {
+        hack : hackathonId,
         judges: judgesOutput,
         teams: teamsOutput,
       },
