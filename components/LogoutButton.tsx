@@ -30,7 +30,7 @@ const LogoutButton: React.FC = () => {
       });
       //   toast.success("Logged out successfully.");
       Cookie.remove("authToken");
-      router.push("/login"); // Redirect to the login page after logout
+      window.location.href = "/login";
     } catch (error: any) {
       console.error("Logout failed:", error);
       toast({
@@ -41,10 +41,7 @@ const LogoutButton: React.FC = () => {
   };
 
   return (
-    <Button
-      onClick={handleLogout}
-      size="sm"
-    >
+    <Button onClick={handleLogout} size="sm">
       Logout
     </Button>
   );

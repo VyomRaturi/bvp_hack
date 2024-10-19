@@ -66,7 +66,7 @@ export const SignInForm: FC<SignInFormProps> = () => {
         description: "You have been logged in.",
       });
 
-      router.push("/organizer");
+      window.location.href = "/organizer";
     } catch (error: any) {
       toast({
         title: "Error Logging In",
@@ -87,7 +87,7 @@ export const SignInForm: FC<SignInFormProps> = () => {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email Address</FormLabel>
+                <FormLabel className="font-semibold">Email Address</FormLabel>
                 <FormControl>
                   <Input
                     type="email"
@@ -105,7 +105,7 @@ export const SignInForm: FC<SignInFormProps> = () => {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel className="font-semibold">Password</FormLabel>
                 <FormControl>
                   <Input
                     type="password"
@@ -121,7 +121,7 @@ export const SignInForm: FC<SignInFormProps> = () => {
           <Button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+            className="w-full bg-primary text-white py-2 rounded hover:bg-black"
           >
             {isLoading ? "Logging In..." : "Login"}
           </Button>

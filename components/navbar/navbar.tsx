@@ -1,14 +1,20 @@
+"use client";
+
 import { NavbarMobile } from "@/components/navbar/navbar-mobile";
 import { NavbarUserLinks } from "@/components/navbar/navbar-user-links";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import LogoutButton from "../LogoutButton";
 import { isAuthenticated } from "@/lib/auth";
 
 export const NavBar: FC = () => {
-  const authenticated = isAuthenticated();
+  const [authenticated, setAuthenticated] = useState(false);
+
+  useEffect(() => {
+    setAuthenticated(isAuthenticated());
+  }, []);
   return (
     <>
       <div className="animate-in fade-in w-full">
@@ -40,9 +46,17 @@ export const NavBar: FC = () => {
                     </Link>
                   </>
                 )} */}
-
               </div>
-                <LogoutButton/>
+              {authenticated ? (
+                <LogoutButton />
+              ) : (
+                <Link
+                  href="/login"
+                  className="px-5 pt-1 pb-2 flex items-center justify-center text-white rounded-xl bg-primary"
+                >
+                  Login
+                </Link>
+              )}
             </div>
           </div>
         </nav>
