@@ -3,7 +3,7 @@ import { TailwindcssButtons } from '@/components/home/launchbtn';
 import { Testimonials } from '@/components/home/testimonials'; 
 import { Wrap } from '@/components/home/wrap-spreed'; 
 import React from 'react'; 
- 
+import Footer from '@/components/home/footer';
 type Props = {}; 
  
 const Home = (props: Props) => { 
@@ -11,6 +11,7 @@ const Home = (props: Props) => {
     <div className='relative'> 
       {/* <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div> */}
       {/* Hero Section */} 
+      <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]"></div>
       <div className="flex items-center justify-center flex-col min-h-[80vh]"> 
         <Wrap /> 
         <TailwindcssButtons /> 
@@ -19,16 +20,17 @@ const Home = (props: Props) => {
       {/* Rest of the content */} 
          
         <div> 
-          <h1 className="text-2xl md:text-2xl lg:text-4xl font-semibold max-w-7xl mx-auto text-center mt-6 py-6 text-gray-800"> 
+          <h1 className="text-2xl md:text-2xl lg:text-4xl font-bold max-w-7xl mx-auto text-center mt-6 py-6 text-gray-800"> 
             Why Choose Judge Smart? 
           </h1> 
           <FeaturesSectionDemo /> 
         </div> 
         <div> 
-          <h1 className="text-2xl md:text-2xl lg:text-4xl font-semibold max-w-7xl mx-auto text-center mt-6 py-6 text-gray-800"> 
+          <h1 className="text-2xl md:text-2xl lg:text-4xl font-bold max-w-7xl mx-auto text-center mt-6 py-6 text-gray-800"> 
             Testimonials: Building Trust and Credibility 
           </h1> 
           <Testimonials /> 
+          <Footer/>
         </div> 
       </div> 
   ); 

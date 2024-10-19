@@ -9,11 +9,11 @@ export function Testimonials() {
                     key={i}
                     title={item.title}
                     description={
-                        <div className="flex flex-col items-center text-center">
+                        <div className="flex flex-col items-center justify-center text-center mx-auto">
                             <img
                                 src={item.photo}
                                 alt={item.title}
-                                className="w-16 h-16 rounded-full mb-4"
+                                className="w-16 h-16 rounded-full mb-4 "
                             />
                             <div className="flex items-center mb-2">
                                 {Array.from({ length: item.rating }).map((_, idx) => (
