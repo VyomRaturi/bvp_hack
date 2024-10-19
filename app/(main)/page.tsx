@@ -11,6 +11,7 @@ const Home = (props: Props) => {
     <div className='relative'> 
       {/* <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div> */}
       {/* Hero Section */} 
+      <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]"></div>
       <div className="flex items-center justify-center flex-col min-h-[80vh]"> 
         <Wrap /> 
         <TailwindcssButtons /> 
