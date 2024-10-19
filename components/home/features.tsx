@@ -32,7 +32,7 @@ export function FeaturesSectionDemo() {
         },
     ];
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 py-10 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 font-semibold md:grid-cols-2 lg:grid-cols-4 gap-6 py-10 max-w-7xl mx-auto">
             {features.map((feature, index) => (
                 <Feature key={feature.title} {...feature} index={index} />
             ))}
@@ -54,7 +54,7 @@ const Feature = ({
     return (
         <div className="flex flex-col items-center text-center p-6 bg-white shadow-md rounded-lg hover:shadow-xl transition-shadow duration-300">
             <div className="mb-4">{icon}</div>
-            <h3 className="text-xl font-semibold text-gray-800 mb-2">{title}</h3>
+            <h3 className="text-xl font-bold text-gray-800 mb-2">{title}</h3>
             <p className="text-gray-600">{description}</p>
         </div>
     );

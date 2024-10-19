@@ -5,8 +5,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { FC } from "react";
 import LogoutButton from "../LogoutButton";
+import { isAuthenticated } from "@/lib/auth";
 
 export const NavBar: FC = () => {
+  const authenticated = isAuthenticated();
   return (
     <>
       <div className="animate-in fade-in w-full">
@@ -25,15 +27,20 @@ export const NavBar: FC = () => {
             </Link>
             <div className="hidden md:flex justify-between grow">
               <div>
-                <Link href="#1" className={buttonVariants({ variant: "link" })}>
-                  Item 1
+                <Link href="/" className={buttonVariants({ variant: "link" })}>
+                  Home
                 </Link>
-                <Link href="#2" className={buttonVariants({ variant: "link" })}>
-                  Item 2
-                </Link>
-                <Link href="#3" className={buttonVariants({ variant: "link" })}>
-                  Item 3
-                </Link>
+                {/* {authenticated && (
+                  <>
+                    <Link href="#2" className={buttonVariants({ variant: "link" })}>
+                      Team Dashboard
+                    </Link>
+                    <Link href="#3" className={buttonVariants({ variant: "link" })}>
+                      Judge Dashboard
+                    </Link>
+                  </>
+                )} */}
+
               </div>
                 <LogoutButton/>
             </div>
