@@ -66,8 +66,7 @@ export const SignInForm: FC<SignInFormProps> = () => {
         description: "You have been logged in.",
       });
 
-      // Redirect to dashboard or desired page
-      router.push("/dashboard");
+      router.push("/organizer");
     } catch (error: any) {
       toast({
         title: "Error Logging In",

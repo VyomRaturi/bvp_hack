@@ -14,7 +14,7 @@ const LoginPage = () => {
   const router = useRouter();
 
   if (isAuthenticated()) {
-    router.push("/"); // Redirect to the home page if already authenticated
+    router.push("/organizer");
   }
 
   return (
