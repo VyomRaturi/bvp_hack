@@ -193,7 +193,7 @@ function getTeamRank(teamId: number) {
 }
 const MyTeamAnalytics = (props: Props) => {
   return (
-    <div className="w-full p-14 gap-4 grid grid-rows-6 relative">
+    <div className="w-full p-14 gap-4 grid relative">
       <div className=" gap-4 flex">
         <div className="bg-muted rounded-3xl w-[30%] flex items-center justify-center flex-col">
           <h1 className="font-bold px-4 py-2 text-8xl ">
@@ -206,7 +206,7 @@ const MyTeamAnalytics = (props: Props) => {
         </div>
       </div>
 
-      <div className="row-span-4 gap-4 grid grid-cols-2">
+      <div className="gap-4 grid grid-cols-2">
         <div className="col-span-1 row-span-1">
           <HighScoring AllteamScores={AllteamScores} />
         </div>

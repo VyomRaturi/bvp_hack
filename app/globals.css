@@ -74,3 +74,21 @@
     @apply bg-background text-foreground;
   }
 }
+
+body > div.flex.flex-col.animate-in.fade-in > div > div > div.w-\[75\%\] > div.flex > div > div.p-6.pt-0.flex-1 > div > div > div > svg{
+  width: 25vw !important;
+}
+
+@layer components {
+  .app-scrollbar {
+    @apply scrollbar-thin scrollbar-thumb-zinc-200 dark:scrollbar-thumb-zinc-700 scrollbar-track-transparent;
+  }
+
+  .app-scrollbar::-webkit-scrollbar-thumb {
+    border-radius: 30px;
+  }
+
+  /* .app-scrollbar:not(:hover) {
+    @apply scrollbar-thumb-transparent;
+  } */
+}

@@ -158,19 +158,19 @@ const chartConfig = {
   },
   Mean: {
     label: "Mean",
-    color: "#625CF9",
+    color: "#003366",
   },
   Mode: {
     label: "Mode",
-    color: "#625CF966",
+    color: "#004080",
   },
   Median: {
     label: "Median",
-    color: "#625CF999",
+    color: "#0059b3",
   },
   YourTeamAverage: {
     label: "You",
-    color: "#625CF9CC",
+    color: "#99ccff",
   },
 } satisfies ChartConfig;
 

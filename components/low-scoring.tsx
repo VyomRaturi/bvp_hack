@@ -68,5 +68,5 @@ export function LowScoring({AllteamScores} : {AllteamScores : TeamData[]}) {
       }
 
     const { worstParameter } = getPerformanceParameters(1);
-    return <CustomChart AllteamScores={AllteamScores} parameterName={worstParameter} title={`Your Lowest Scoring Parameter: ${worstParameter.replace(/([A-Z])/g, " $1")}`} />;
+    return <CustomChart AllteamScores={AllteamScores} parameterName={worstParameter} title={`Lowest Scoring Parameter: ${worstParameter.replace(/([A-Z])/g, " $1")}`} />;
   }

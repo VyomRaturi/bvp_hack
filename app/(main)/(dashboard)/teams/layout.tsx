@@ -11,7 +11,7 @@ interface TeamsLayoutProps {
 
 const TeamsLayout: React.FC<TeamsLayoutProps> = ({ children }) => {
   return (
-    <div className="flex max-h-[90vh">
+    <div className="flex max-h-[90vh] app-scrollbar">
 
         {children}
 

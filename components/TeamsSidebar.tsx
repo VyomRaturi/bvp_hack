@@ -67,7 +67,7 @@ interface TeamsSidebarProps {
   }
 
   return (
-    <div>
+    <div className="">
       <h2 className="text-xl font-semibold mb-4">Teams</h2>
       <ul className="space-y-2">
         {teams.map((team) => (

@@ -51,13 +51,13 @@ const TeamPage: React.FC<TeamPageProps> = ({ params }) => {
   }
 
   return (
-    <div className="flex bg-green-300 w-full max-h-[90vh]">
+    <div className="flex  w-full max-h-[90vh]">
       {/* Sidebar */}
-      <div className="w-1/3 bg-gray-800 text-white p-4 overflow-auto">
+      <div className="w-1/3 bg-gray-800 text-white p-4 app-scrollbar overflow-auto">
         <TeamsSidebar refreshTrigger={refreshTrigger} />
       </div>
       {/* Main Content */}
-      <div className="w-2/3 bg-gray-100 p-6 overflow-auto">
+      <div className="w-2/3 bg-gray-100 p-6 overflow-auto app-scrollbar">
         <QuestionsPreview teamId={teamId} onEvaluationSubmit={handleEvaluationSubmit} />
       </div>
     </div>

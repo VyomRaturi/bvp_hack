@@ -103,7 +103,7 @@ function mapToChartData(parameterName: string, AllteamScores : TeamData[]): Char
           score: entry.score,
           percentile,
           isUserTeam,
-          fill: isUserTeam ? "purple" : "var(--color-score)", // Highlight your team
+          fill: isUserTeam ? "#001f3f" : "#0073e6", // Highlight your team
         };
       })
       .sort((a, b) => a.score - b.score); // Sort in increasing order by score

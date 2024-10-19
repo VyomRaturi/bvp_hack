@@ -93,5 +93,5 @@ export function HighScoring({AllteamScores} : {AllteamScores : TeamData[]}) {
     }
     
     const { bestParameter } = getPerformanceParameters(1);
-    return <CustomChart  AllteamScores={AllteamScores} parameterName={bestParameter} title={`Your Highest Scoring Parameter: ${bestParameter.replace(/([A-Z])/g, " $1")}`} />;
+    return <CustomChart  AllteamScores={AllteamScores} parameterName={bestParameter} title={`Highest Scoring Parameter: ${bestParameter.replace(/([A-Z])/g, " $1")}`} />;
   }

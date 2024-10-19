@@ -19,6 +19,12 @@ export interface IEvaluation extends Document {
   createdAt: Date;
   updatedAt: Date;
 }
+export type PopulatedEvaluation = {
+  judge: { name: string; id: string };
+  team: { name: string; id: string };
+  parameter: string;
+  score: number;
+};
 
 const AnswerSchema: Schema = new Schema({
   question: { type: Schema.Types.ObjectId, ref: "Question", required: true },
