@@ -16,9 +16,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
     }
     setLoading(false);
   }, []);
-  return loading ? (
-    <Loader2 className="w-10 h-10" />
-  ) : (
+  return loading ? null : (
     <div className="flex flex-col animate-in fade-in">
       {/* <NavBar /> */}
       <div className="flex flex-col grow h-full">{children}</div>

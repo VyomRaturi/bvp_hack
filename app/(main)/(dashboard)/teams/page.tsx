@@ -30,15 +30,11 @@ const TeamsPage: React.FC = () => {
     fetchUser();
   }, [router]);
 
-  if (loading) {
-    return <p className="text-center">Loading...</p>;
-  }
-
   return (
     <div className="flex w-full">
       {/* Sidebar */}
       <div className="w-1/3 bg-gray-800 text-white p-4">
-        <TeamsSidebar  refreshTrigger={false}/>
+        <TeamsSidebar refreshTrigger={false} />
       </div>
       {/* Main Content */}
       <div className="w-2/3 bg-gray-100 p-6 flex items-center justify-center">

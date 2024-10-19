@@ -4,6 +4,7 @@
 
 import React, { useEffect, useState } from "react";
 import { toast } from "../ui/use-toast";
+import { Skeleton } from "@/components/ui/skeleton"; // Import ShadCN Skeleton
 
 interface AnswerOption {
   answer: string;
@@ -59,7 +60,6 @@ const QuestionsPreview: React.FC<QuestionsPreviewProps> = ({
               error.message || "An error occurred while fetching questions.",
             variant: "destructive",
           });
-          // toast.error();
         } finally {
           setLoading(false);
         }
@@ -79,13 +79,11 @@ const QuestionsPreview: React.FC<QuestionsPreviewProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Check if all questions are answered
     if (Object.keys(selectedAnswers).length !== questions.length) {
       toast({
         title: "Please answer all questions.",
         variant: "destructive",
       });
-      //   toast.error("Please answer all questions.");
       return;
     }
 
@@ -113,14 +111,11 @@ const QuestionsPreview: React.FC<QuestionsPreviewProps> = ({
       if (!res.ok) {
         throw new Error(data.message || "Submission failed.");
       }
+
       toast({
         title: data.message,
       });
       onEvaluationSubmit();
-      //   toast.success(data.message);
-      // Optionally, redirect or update UI
-      // For example, reload the teams sidebar to update status
-      // This would require lifting state or using a state management solution
     } catch (error: any) {
       console.error("Submission Error:", error);
       toast({
@@ -133,7 +128,33 @@ const QuestionsPreview: React.FC<QuestionsPreviewProps> = ({
   };
 
   if (loading) {
-    return <p>Loading questions...</p>;
+    return (
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <h2 className="text-2xl font-semibold mb-4">Evaluate Team</h2>
+        {Array(5)
+          .fill(0)
+          .map((_, index) => (
+            <div key={index} className="mb-6">
+              <div>
+                <Skeleton className="h-6 w-3/4 mb-2" />{" "}
+                {/* Question Skeleton */}
+                <Skeleton className="h-4 w-1/6 mb-4" />{" "}
+                {/* Parameter Skeleton */}
+              </div>
+              <div className="space-y-2">
+                <Skeleton className="h-10 w-full rounded-md" />
+                {/* Answer Option 1 */}
+                <Skeleton className="h-10 w-full rounded-md" />
+                {/* Answer Option 2 */}
+                <Skeleton className="h-10 w-full rounded-md" />
+                {/* Answer Option 3 */}
+                <Skeleton className="h-10 w-full rounded-md" />
+                {/* Answer Option 4 */}
+              </div>
+            </div>
+          ))}
+      </div>
+    );
   }
 
   if (questions.length === 0) {

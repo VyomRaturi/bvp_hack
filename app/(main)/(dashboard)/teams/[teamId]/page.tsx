@@ -7,7 +7,6 @@ import TeamsSidebar from "@/components/TeamsSidebar";
 import QuestionsPreview from "@/components/hack/QuestionPreview";
 import { useRouter, usePathname } from "next/navigation";
 
-
 interface TeamPageProps {
   params: {
     teamId: string;
@@ -46,19 +45,18 @@ const TeamPage: React.FC<TeamPageProps> = ({ params }) => {
     setRefreshTrigger((prev) => !prev);
   };
 
-  if (loading) {
-    return <p className="text-center">Loading...</p>;
-  }
-
   return (
     <div className="flex  w-full max-h-[87vh] overflow-y-scroll app-scrollbar">
       {/* Sidebar */}
-      <div className="w-1/3 bg-gray-800 text-white p-4 app-scrollbar overflow-y-scroll">
+      <div className="w-1/3 text-white p-4 rounded-lg mx-6 bg-gray-800 app-scrollbar overflow-y-scroll">
         <TeamsSidebar refreshTrigger={refreshTrigger} />
       </div>
       {/* Main Content */}
       <div className="w-2/3 bg-gray-100 p-6 overflow-y-scroll app-scrollbar">
-        <QuestionsPreview teamId={teamId} onEvaluationSubmit={handleEvaluationSubmit} />
+        <QuestionsPreview
+          teamId={teamId}
+          onEvaluationSubmit={handleEvaluationSubmit}
+        />
       </div>
     </div>
   );
