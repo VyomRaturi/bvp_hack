@@ -59,7 +59,7 @@ interface TeamsSidebarProps {
   };
 
   if (loading) {
-    return <p className="text-center">Loading teams...</p>;
+    return <div className="h-full flex items-center"> <p className="text-center">Loading teams...</p> </div>;
   }
 
   if (teams.length === 0) {
@@ -67,7 +67,7 @@ interface TeamsSidebarProps {
   }
 
   return (
-    <div className="">
+    <div className="h-full">
       <h2 className="text-xl font-semibold mb-4">Teams</h2>
       <ul className="space-y-2">
         {teams.map((team) => (

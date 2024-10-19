@@ -34,8 +34,8 @@ export const NavBar: FC = () => {
                 <Link href="#3" className={buttonVariants({ variant: "link" })}>
                   Item 3
                 </Link>
-                <LogoutButton/>
               </div>
+                <LogoutButton/>
             </div>
           </div>
         </nav>

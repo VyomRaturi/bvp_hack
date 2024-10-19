@@ -1,8 +1,8 @@
 // src/app/layout.tsx
-import { NavBar } from "@/components/navbar/navbar";
 import "./globals.css";
 import { UserProvider } from "@/context/UserContext";
 import { Footer } from "@/components/footer";
+import { NavBar } from "@/components/navbar/navbar";
 export default function RootLayout({
   children,
 }: {

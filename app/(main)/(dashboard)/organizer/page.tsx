@@ -13,10 +13,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
-import { MoveLeft, MoveRight } from "lucide-react";
+import { Loader2, MoveLeft, MoveRight } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
 import * as XLSX from "xlsx"; // Import xlsx library
+import { useRouter } from "next/navigation";
 
 interface JudgeInput {
   name: string;
@@ -44,6 +45,7 @@ export default function OrganiserForm() {
   const [teams, setTeams] = useState<TeamInput[]>([]);
   const [judgeFile, setJudgeFile] = useState<File | null>(null); // State for uploaded judge file
   const [teamFile, setTeamFile] = useState<File | null>(null); // State for uploaded team file
+  const router = useRouter();
 
   const handleNext = async () => {
     if (currentStep < steps.length - 1) {
@@ -60,6 +62,7 @@ export default function OrganiserForm() {
       };
 
       try {
+        setLoading(true);
         const response = await fetch("/api/hackathon/create", {
           method: "POST",
           headers: {
@@ -68,14 +71,20 @@ export default function OrganiserForm() {
           body: JSON.stringify(data),
         });
 
+        console.log("Response:", response);
+
         if (response.ok) {
           const result = await response.json();
           console.log("Hackathon created successfully:", result);
+          setLoading(false);
+          router.push(`/hack/${result.hack}`);
         } else {
           console.error("Failed to create hackathon:", response.statusText);
+          setLoading(false);
         }
       } catch (error) {
         console.error("Error creating hackathon:", error);
+        setLoading(false);
       }
     }
   };
@@ -314,7 +323,11 @@ export default function OrganiserForm() {
           ) : (
             <div></div>
           )}
-          <Button onClick={handleNext}>
+          <Button disabled={loading} onClick={handleNext}>
+            <Loader2
+              size={16}
+              className={loading ? "animate-spin" : "hidden"}
+            />
             {currentStep === steps.length - 1 ? "Create" : <MoveRight />}
           </Button>
         </CardFooter>

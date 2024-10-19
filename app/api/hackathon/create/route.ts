@@ -94,7 +94,7 @@ export async function POST(request: NextRequest) {
         throw new Error("Each judge must have a name and an email.");
       }
 
-      const normalizedEmail = "jud" + email.toLowerCase() ;
+      const normalizedEmail = "jud4wadsfsddasdf" + email.toLowerCase();
 
       // Check if judge already exists
       const existingJudge = await User.findOne({ email: normalizedEmail });
@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
       }
 
       const plainPassword = generatePassword(12);
-    //   const hashedPassword = await bcrypt.hash(plainPassword, 10);
+      //   const hashedPassword = await bcrypt.hash(plainPassword, 10);
 
       // Create Judge User
       const newJudge = await User.create({
@@ -131,7 +131,7 @@ export async function POST(request: NextRequest) {
         throw new Error("Each team must have a name, an email, and members.");
       }
 
-      const normalizedEmail = email.toLowerCase();
+      const normalizedEmail = "teamsdfsdufibjssdfsdfdf" + email.toLowerCase();
 
       // Check if team already exists
       const existingTeam = await Team.findOne({ email: normalizedEmail });
@@ -140,7 +140,7 @@ export async function POST(request: NextRequest) {
       }
 
       const plainPassword = generatePassword(12);
-    //   const hashedPassword = await bcrypt.hash(plainPassword, 10);
+      //   const hashedPassword = await bcrypt.hash(plainPassword, 10);
 
       // Create Team
       const newTeam = await Team.create({
@@ -152,7 +152,7 @@ export async function POST(request: NextRequest) {
       });
       console.log("new team, ", newTeam);
       // Associate Team with Hackathon
-    // if (newTeam._id)
+      // if (newTeam._id)
       hackathon.teams?.push(newTeam.id);
 
       // Prepare Output
@@ -170,7 +170,7 @@ export async function POST(request: NextRequest) {
     // Return the Outputs
     return NextResponse.json(
       {
-        hack : hackathonId,
+        hack: hackathonId,
         judges: judgesOutput,
         teams: teamsOutput,
       },

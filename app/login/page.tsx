@@ -8,21 +8,14 @@ import { useRouter } from "next/navigation";
 import { useUser } from "@/context/UserContext"; // Ensure the path is correct
 import { useEffect } from "react";
 import { toast } from "@/components/ui/use-toast"; // Ensure the path is correct
+import { isAuthenticated } from "@/lib/auth";
 
 const LoginPage = () => {
   const router = useRouter();
-  const { user, loading } = useUser();
 
-  useEffect(() => {
-    if (!loading && user) {
-      // Redirect authenticated users to the dashboard or desired page
-      router.push("/dashboard");
-      toast({
-        title: "Already Logged In",
-        description: "You are already logged in.",
-      });
-    }
-  }, [user, loading, router]);
+  if (isAuthenticated()) {
+    router.push("/organizer");
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">

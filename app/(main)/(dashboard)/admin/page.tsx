@@ -21,7 +21,9 @@ const Page = (props: Props) => {
 
   return (
     <div className="mx-auto w-[600px]">
-      <div className="text-4xl underline mt-20 font-semibold">Admin Dashboard</div>
+      <div className="text-4xl underline mt-20 font-semibold">
+        Admin Dashboard
+      </div>
 
       <div className="py-12">
         <div className="text-3xl font-medium">Create Organiser</div>

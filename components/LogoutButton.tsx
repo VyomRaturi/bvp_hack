@@ -5,6 +5,8 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "./ui/use-toast";
+import Cookie from "js-cookie";
+import { Button } from "./ui/button";
 
 const LogoutButton: React.FC = () => {
   const router = useRouter();
@@ -24,26 +26,27 @@ const LogoutButton: React.FC = () => {
       }
 
       toast({
-        title : "Logged out successfully"
-      })
-    //   toast.success("Logged out successfully.");
+        title: "Logged out successfully",
+      });
+      //   toast.success("Logged out successfully.");
+      Cookie.remove("authToken");
       router.push("/login"); // Redirect to the login page after logout
     } catch (error: any) {
-        console.error("Logout failed:", error);
-    toast({
-        title : error.message || "An error occurred during logout.",
-        variant : "destructive"
-    })    
+      console.error("Logout failed:", error);
+      toast({
+        title: error.message || "An error occurred during logout.",
+        variant: "destructive",
+      });
     }
   };
 
   return (
-    <button
+    <Button
       onClick={handleLogout}
-      className="mt-4 bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-200"
+      size="sm"
     >
       Logout
-    </button>
+    </Button>
   );
 };
 

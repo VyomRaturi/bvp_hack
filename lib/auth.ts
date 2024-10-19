@@ -2,6 +2,7 @@
 
 import jwt from "jsonwebtoken";
 import { NextRequest } from "next/server";
+import Cookie from "js-cookie";
 
 // export interface AuthPayload {
 //   userId: string;
@@ -29,11 +30,19 @@ export const verifyToken = (request: NextRequest): AuthPayload | null => {
     if (!token) return null;
 
     // Verify the token using JWT_SECRET
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as AuthPayload;
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET as string
+    ) as AuthPayload;
 
     return decoded;
   } catch (error) {
     console.error("Token verification error:", error);
     return null;
   }
+};
+
+export const isAuthenticated = () => {
+  const token = Cookie.get("authToken");
+  return token !== undefined;
 };

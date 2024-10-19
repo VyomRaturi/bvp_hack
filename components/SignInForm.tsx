@@ -17,6 +17,7 @@ import { toast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import Cookie from "js-cookie";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -39,10 +40,7 @@ export const SignInForm: FC<SignInFormProps> = () => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const login = async ({
-    email,
-    password,
-  }: z.infer<typeof formSchema>) => {
+  const login = async ({ email, password }: z.infer<typeof formSchema>) => {
     try {
       setIsLoading(true);
 
@@ -60,13 +58,15 @@ export const SignInForm: FC<SignInFormProps> = () => {
         throw new Error(data.message || "Something went wrong");
       }
 
+      // Store the token in a cookie
+      Cookie.set("authToken", "token", { expires: 7 }); // Expires in 7 days
+
       toast({
         title: "Success!",
         description: "You have been logged in.",
       });
 
-      // Redirect to dashboard or desired page
-      router.push("/dashboard");
+      router.push("/organizer");
     } catch (error: any) {
       toast({
         title: "Error Logging In",
@@ -81,10 +81,7 @@ export const SignInForm: FC<SignInFormProps> = () => {
   return (
     <>
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(login)}
-          className="space-y-6"
-        >
+        <form onSubmit={form.handleSubmit(login)} className="space-y-6">
           <FormField
             control={form.control}
             name="email"
