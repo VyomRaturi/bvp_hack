@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { FC } from "react";
 import Image from "next/image";
 import { MainNav } from "@/components/demo-dashboard/main-nav";
@@ -13,9 +13,16 @@ import {
 import { useUser } from "@/context/UserContext";
 
 export const DemoDashboard: FC = () => {
+  const { user, loading } = useUser();
 
-  const {user} = useUser();
-  console.log(user);
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!user) {
+    return <div>Please log in to access the dashboard.</div>;
+  }
+
   return (
     <>
       <div className="md:hidden">

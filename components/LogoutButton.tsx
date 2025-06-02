@@ -5,9 +5,13 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "./ui/use-toast";
+import Cookie from "js-cookie";
+import { Button } from "./ui/button";
+import { useUser } from "@/context/UserContext";
 
 const LogoutButton: React.FC = () => {
   const router = useRouter();
+  const { refreshUser } = useUser();
 
   const handleLogout = async () => {
     try {
@@ -23,27 +27,27 @@ const LogoutButton: React.FC = () => {
         throw new Error(errorData.message || "Failed to logout.");
       }
 
+      Cookie.remove("authToken");
+      Cookie.remove("token");
+      await refreshUser(); // This will set the user to null
+      router.push("/login");
+
       toast({
-        title : "Logged out successfully"
-      })
-    //   toast.success("Logged out successfully.");
-      router.push("/login"); // Redirect to the login page after logout
+        title: "Logged out successfully",
+      });
     } catch (error: any) {
-        console.error("Logout failed:", error);
-    toast({
-        title : error.message || "An error occurred during logout.",
-        variant : "destructive"
-    })    
+      console.error("Logout failed:", error);
+      toast({
+        title: error.message || "An error occurred during logout.",
+        variant: "destructive",
+      });
     }
   };
 
   return (
-    <button
-      onClick={handleLogout}
-      className="mt-4 bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-200"
-    >
+    <Button onClick={handleLogout} size="sm">
       Logout
-    </button>
+    </Button>
   );
 };
 

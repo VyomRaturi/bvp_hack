@@ -13,10 +13,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
-import { MoveLeft, MoveRight } from "lucide-react";
+import { Loader2, MoveLeft, MoveRight } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
-import * as XLSX from "xlsx"; // Import xlsx library
+import * as XLSX from "xlsx";
+import { useRouter } from "next/navigation";
+import { toast } from "@/components/ui/use-toast";
 
 interface JudgeInput {
   name: string;
@@ -25,8 +27,15 @@ interface JudgeInput {
 
 interface TeamInput {
   name: string;
-  email: string; // New email field for TeamInput
+  email: string;
   members: string[];
+}
+
+interface FormData {
+  hackName: string;
+  hackDesc: string;
+  start: string;
+  end: string;
 }
 
 const steps = ["Hack-a-thon Details", "Create Judges", "Add Teams"];
@@ -34,7 +43,7 @@ const steps = ["Hack-a-thon Details", "Create Judges", "Add Teams"];
 export default function OrganiserForm() {
   const [loading, setLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     hackName: "",
     hackDesc: "",
     start: "",
@@ -42,24 +51,61 @@ export default function OrganiserForm() {
   });
   const [judges, setJudges] = useState<JudgeInput[]>([]);
   const [teams, setTeams] = useState<TeamInput[]>([]);
-  const [judgeFile, setJudgeFile] = useState<File | null>(null); // State for uploaded judge file
-  const [teamFile, setTeamFile] = useState<File | null>(null); // State for uploaded team file
+  const [judgeFile, setJudgeFile] = useState<File | null>(null);
+  const [teamFile, setTeamFile] = useState<File | null>(null);
+  const router = useRouter();
 
   const handleNext = async () => {
     if (currentStep < steps.length - 1) {
       setCurrentStep((prev) => prev + 1);
     } else {
+      // Validation
+      if (
+        !formData.hackName ||
+        !formData.hackDesc ||
+        !formData.start ||
+        !formData.end
+      ) {
+        toast({
+          title: "Missing Information",
+          description: "Please fill in all hackathon details",
+          variant: "destructive",
+        });
+        setCurrentStep(0);
+        return;
+      }
+
+      if (judges.length === 0) {
+        toast({
+          title: "No Judges",
+          description: "Please add at least one judge",
+          variant: "destructive",
+        });
+        setCurrentStep(1);
+        return;
+      }
+
+      if (teams.length === 0) {
+        toast({
+          title: "No Teams",
+          description: "Please add at least one team",
+          variant: "destructive",
+        });
+        return;
+      }
+
       // Final step, submit the form data
       const data = {
         ...formData,
         judges,
         teams: teams.map((team) => ({
           ...team,
-          members: team.members.join(", "), // Convert members array to comma-separated string
+          members: team.members.join(", "),
         })),
       };
 
       try {
+        setLoading(true);
         const response = await fetch("/api/hackathon/create", {
           method: "POST",
           headers: {
@@ -68,14 +114,30 @@ export default function OrganiserForm() {
           body: JSON.stringify(data),
         });
 
-        if (response.ok) {
-          const result = await response.json();
-          console.log("Hackathon created successfully:", result);
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          toast({
+            title: "Success",
+            description: "Hackathon created successfully!",
+          });
+          router.push(`/hackathon/${result.hackathon.id}`);
         } else {
-          console.error("Failed to create hackathon:", response.statusText);
+          toast({
+            title: "Error",
+            description: result.error || "Failed to create hackathon",
+            variant: "destructive",
+          });
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error creating hackathon:", error);
+        toast({
+          title: "Error",
+          description: error.message || "An unexpected error occurred",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -89,55 +151,88 @@ export default function OrganiserForm() {
   const handleJudgeFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setJudgeFile(file); // Store the judge file in the state
+      setJudgeFile(file);
       const reader = new FileReader();
       reader.onload = (event) => {
-        const data = new Uint8Array(event.target?.result as ArrayBuffer);
-        const workbook = XLSX.read(data, { type: "array" });
-        const sheetName = workbook.SheetNames[0];
-        const sheet = workbook.Sheets[sheetName];
-        const parsedData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+        try {
+          const data = new Uint8Array(event.target?.result as ArrayBuffer);
+          const workbook = XLSX.read(data, { type: "array" });
+          const sheetName = workbook.SheetNames[0];
+          const sheet = workbook.Sheets[sheetName];
+          const judgesData: JudgeInput[] = XLSX.utils
+            .sheet_to_json(sheet, {
+              header: 1,
+            })
+            .slice(1)
+            .map((row: any) => ({
+              name: row[0],
+              email: row[1],
+            }))
+            .filter((judge: JudgeInput) => judge.name && judge.email);
 
-        const judgesData: JudgeInput[] = parsedData
-          .slice(1) // Skip the header row
-          .map((row: any) => ({
-            name: row[0],
-            email: row[1],
-          }));
-
-        setJudges(judgesData);
+          setJudges(judgesData);
+          toast({
+            title: "Success",
+            description: `Imported ${judgesData.length} judges`,
+          });
+        } catch (error) {
+          toast({
+            title: "Error",
+            description: "Failed to parse judge data",
+            variant: "destructive",
+          });
+        }
       };
       reader.readAsArrayBuffer(file);
     } else {
-      setJudgeFile(null); // Reset judge file state if no file is selected
+      setJudgeFile(null);
     }
   };
 
   const handleTeamFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setTeamFile(file); // Store the team file in the state
+      setTeamFile(file);
       const reader = new FileReader();
       reader.onload = (event) => {
-        const data = new Uint8Array(event.target?.result as ArrayBuffer);
-        const workbook = XLSX.read(data, { type: "array" });
-        const sheetName = workbook.SheetNames[0];
-        const sheet = workbook.Sheets[sheetName];
-        const parsedData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+        try {
+          const data = new Uint8Array(event.target?.result as ArrayBuffer);
+          const workbook = XLSX.read(data, { type: "array" });
+          const sheetName = workbook.SheetNames[0];
+          const sheet = workbook.Sheets[sheetName];
+          const teamsData: TeamInput[] = XLSX.utils
+            .sheet_to_json(sheet, {
+              header: 1,
+            })
+            .slice(1)
+            .map((row: any) => ({
+              name: row[0],
+              email: row[1],
+              members: row[2]
+                ? row[2].split(",").map((m: string) => m.trim())
+                : [],
+            }))
+            .filter(
+              (team: TeamInput) =>
+                team.name && team.email && team.members.length > 0
+            );
 
-        const teamsData: TeamInput[] = parsedData
-          .slice(1) // Skip the header row
-          .map((row: any) => ({
-            name: row[0],
-            email: row[1], // Capture email from the file
-            members: row[2] ? row[2].split(",") : [],
-          }));
-
-        setTeams(teamsData);
+          setTeams(teamsData);
+          toast({
+            title: "Success",
+            description: `Imported ${teamsData.length} teams`,
+          });
+        } catch (error) {
+          toast({
+            title: "Error",
+            description: "Failed to parse team data",
+            variant: "destructive",
+          });
+        }
       };
       reader.readAsArrayBuffer(file);
     } else {
-      setTeamFile(null); // Reset team file state if no file is selected
+      setTeamFile(null);
     }
   };
 
@@ -158,7 +253,7 @@ export default function OrganiserForm() {
           <div className="h-full space-y-4">
             <div>
               <Label className="font-medium" htmlFor="hackName">
-                Name Your Hack-a-Thon
+                Name Your Hack-a-thon
               </Label>
               <Input
                 id="hackName"
@@ -210,7 +305,10 @@ export default function OrganiserForm() {
           <div>
             <div>
               Upload the CSV with details of judges.
-              <Link className="ml-1 underline text-blue-700" href="#">
+              <Link
+                className="ml-1 underline text-blue-700"
+                href="/samples/sample-judges.xlsx"
+              >
                 Download the sample excel from here
               </Link>
               <Input
@@ -243,7 +341,10 @@ export default function OrganiserForm() {
           <div>
             <div>
               Upload the CSV with details of teams.
-              <Link className="ml-1 underline text-blue-700" href="#">
+              <Link
+                className="ml-1 underline text-blue-700"
+                href="/samples/sample-teams.xlsx"
+              >
                 Download the sample excel from here
               </Link>
               <Input
@@ -281,7 +382,7 @@ export default function OrganiserForm() {
     <div className="flex items-center justify-center min-h-[calc(100vh-72px)]">
       <Card className="w-full border-none shadow-none max-w-2xl mx-auto">
         <CardHeader>
-          <CardTitle className="text-5xl">Create Hack-a-Thon</CardTitle>
+          <CardTitle className="text-5xl">Create Hack-a-thon</CardTitle>
           <CardDescription>
             Plan your next adventure step by step
           </CardDescription>
@@ -308,14 +409,23 @@ export default function OrganiserForm() {
         </CardContent>
         <CardFooter className="flex justify-between">
           {currentStep > 0 ? (
-            <Button onClick={handlePrevious}>
+            <Button onClick={handlePrevious} disabled={loading}>
               <MoveLeft />
             </Button>
           ) : (
             <div></div>
           )}
-          <Button onClick={handleNext}>
-            {currentStep === steps.length - 1 ? "Create" : <MoveRight />}
+          <Button onClick={handleNext} disabled={loading}>
+            {loading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Creating...
+              </>
+            ) : currentStep === steps.length - 1 ? (
+              "Create"
+            ) : (
+              <MoveRight />
+            )}
           </Button>
         </CardFooter>
       </Card>

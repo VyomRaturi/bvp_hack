@@ -5,7 +5,7 @@ import connectDB from "@/lib/mongodb";
 import bcrypt from "bcrypt";
 
 export const createAdmin = async (email: string, password: string) => {
-  console.log(email, password)
+  console.log(email, password);
   try {
     await connectDB();
 
@@ -13,17 +13,14 @@ export const createAdmin = async (email: string, password: string) => {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       throw new Error("User already exists");
-    }
-
-    console.log(password)
-    // const hashedPassword = await bcrypt.hash(password, 10);
-    // // const hashedPassword = await bcrypt.hash(password, 10);
-    // console.log(`Hashed password for admin ${email}: ${hashedPassword}`);
+    } // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+    console.log(`Password hashed for admin ${email}`);
 
     // Create admin user
     const newUser = await User.create({
       email,
-      password: password,
+      password: hashedPassword,
       role: "admin",
     });
 

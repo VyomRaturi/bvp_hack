@@ -1,13 +1,13 @@
-// src/lib/mongodb.ts
+// // src/lib/mongodb.ts
 
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const MONGODB_URI = process.env.MONGODB_URI as string;
 
 // Check if the MONGODB_URI is defined
 if (!MONGODB_URI) {
   throw new Error(
-    'Please define the MONGODB_URI environment variable inside .env.local'
+    "Please define the MONGODB_URI environment variable inside .env.local"
   );
 }
 

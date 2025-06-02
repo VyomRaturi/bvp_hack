@@ -20,6 +20,7 @@ import {
   DialogTitle,
 } from "./ui/dialog";
 import { Textarea } from "./ui/textarea";
+import { useRouter } from "next/navigation";
 
 type ParameterSelectorProps = {
   defaultParameters: string[];
@@ -39,6 +40,7 @@ const ParameterSelector: React.FC<ParameterSelectorProps> = ({
   const [questionsArray, setQuestionsArray] = useState<Question[]>([]);
   const [remarks, setRemarks] = useState<string>("");
   const [open, setOpen] = useState(false);
+  const router = useRouter();
 
   // Function to handle parameter selection
   const handleSelectParameter = (param: string) => {
@@ -131,6 +133,7 @@ const ParameterSelector: React.FC<ParameterSelectorProps> = ({
         questions: ansContent,
       });
       console.log(questions);
+      router.push(`/teams`);
       setLoading(false);
     } catch (error) {
       console.error("Error saving questions:", error);
@@ -153,7 +156,7 @@ const ParameterSelector: React.FC<ParameterSelectorProps> = ({
                   size={16}
                   className={loading ? "animate-spin" : "hidden"}
                 />
-                Edit Profile
+                Edit Questions
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
@@ -201,7 +204,7 @@ const ParameterSelector: React.FC<ParameterSelectorProps> = ({
   } else {
     return (
       <div className="p-4">
-        <h2 className="text-lg font-semibold">Suggested Parameters</h2>
+        <h2 className="text-lg mb-4 font-semibold">Suggested Parameters</h2>
         <div className="flex flex-wrap mb-4">
           {defaultParams.map((param) => (
             <div
@@ -219,7 +222,7 @@ const ParameterSelector: React.FC<ParameterSelectorProps> = ({
           ))}
         </div>
 
-        <h2 className="text-lg font-semibold">Selected Parameters</h2>
+        <h2 className="text-lg mb-4 font-semibold">Selected Parameters</h2>
         <div className="">
           <div className="flex flex-wrap mb-2">
             {selectedParams.map((param) => (
@@ -236,7 +239,7 @@ const ParameterSelector: React.FC<ParameterSelectorProps> = ({
                   {param}
                   {defaultParameters.includes(param) && (
                     <span className="text-red-500 top-0 absolute">
-                      <FaStar color="gold" />
+                      <FaStar size={10} color="gold" />
                     </span>
                   )}
                 </span>

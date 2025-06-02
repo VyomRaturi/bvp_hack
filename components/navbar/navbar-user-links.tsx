@@ -1,33 +1,17 @@
 "use client";
 
 import { UserNav } from "@/components/navbar/user-nav";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+import { useUser } from "@/context/UserContext";
 import Link from "next/link";
 import { FC } from "react";
-import { useUser } from "reactfire";
 
 export const NavbarUserLinks: FC = () => {
-  // const { data, hasEmitted } = useUser();
+  const { user } = useUser();
 
-  return (
-    <>
-      {true
-      // hasEmitted && data
-       ? (
-        <>
-          <Link href="/app" className={buttonVariants()}>
-            Dashboard
-          </Link>
-          <UserNav />
-        </>
-      ) : (
-        <>
-          <Link href="/login" className={buttonVariants()}>
-            Login &rarr;
-          </Link>
-        </>
-      )}
-    </>
-  );
+  if (!user) {
+    return null;
+  }
+
+  return <UserNav />;
 };

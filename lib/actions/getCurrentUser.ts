@@ -7,24 +7,45 @@ import jwt from "jsonwebtoken";
 
 interface DecodedToken {
   userId: string;
+  role: string;
 }
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
+if (!JWT_SECRET) {
+  throw new Error("JWT_SECRET must be defined in environment variables");
+}
+
 export async function getCurrentUser(req: NextRequest) {
-  const token = req.cookies.get("token")?.value; // Assuming the JWT is stored in a 'token' cookie
-
-  if (!token) {
-    return null;
-  }
-
   try {
+    // Get token from cookies
+    const token = req.cookies.get("token")?.value;
+    console.log("Token from cookie:", token);
+
+    if (!token) {
+      console.log("No token found in cookies");
+      return null;
+    }
+
+    // Verify and decode the token
     const decoded = jwt.verify(token, JWT_SECRET) as DecodedToken;
+    console.log("Decoded token:", decoded);
+
+    // Connect to database
     await connectDB();
-    const user = await User.findById(decoded.userId).lean();
+
+    // Find user by ID and exclude password
+    const user = await User.findById(decoded.userId).select("-password").lean();
+    console.log("Found user:", user);
+
+    if (!user) {
+      console.log("No user found for token");
+      return null;
+    }
+
     return user;
   } catch (error) {
-    console.error("Error decoding token:", error);
+    console.error("Error getting current user:", error);
     return null;
   }
 }
