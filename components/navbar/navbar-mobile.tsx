@@ -10,43 +10,49 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
+import { useUser } from "@/context/UserContext";
 import { MenuIcon } from "lucide-react";
+import Link from "next/link";
 
 export const NavbarMobile = () => {
+  const { user } = useUser();
+
   return (
-    <>
-      <NavigationMenu>
-        <NavigationMenuList>
-          <NavigationMenuItem>
-            <NavigationMenuTrigger className="-mr-4">
-              <MenuIcon />
-            </NavigationMenuTrigger>
-            <NavigationMenuContent className="flex flex-col p-1">
-              <NavigationMenuLink
-                href="#1"
-                className={buttonVariants({ variant: "link" })}
+    <NavigationMenu>
+      <NavigationMenuList>
+        <NavigationMenuItem>
+          <NavigationMenuTrigger className="-mr-4">
+            <MenuIcon />
+          </NavigationMenuTrigger>
+          <NavigationMenuContent className="flex flex-col p-1">
+            <Link href="/" className={buttonVariants({ variant: "ghost" })}>
+              Home
+            </Link>
+
+            {user && (
+              <Link
+                href="/dashboard"
+                className={buttonVariants({ variant: "ghost" })}
               >
-                Item 1
-              </NavigationMenuLink>
-              <NavigationMenuLink
-                href="#2"
-                className={buttonVariants({ variant: "link" })}
-              >
-                Item 2
-              </NavigationMenuLink>
-              <NavigationMenuLink
-                href="#3"
-                className={buttonVariants({ variant: "link" })}
-              >
-                Item 3
-              </NavigationMenuLink>
-              <div className="flex flex-col mb-0.5">
+                Dashboard
+              </Link>
+            )}
+
+            <div className="flex flex-col mb-0.5">
+              {user ? (
                 <NavbarUserLinks />
-              </div>
-            </NavigationMenuContent>
-          </NavigationMenuItem>
-        </NavigationMenuList>
-      </NavigationMenu>
-    </>
+              ) : (
+                <Link
+                  href="/login"
+                  className={buttonVariants({ variant: "default" })}
+                >
+                  Login
+                </Link>
+              )}
+            </div>
+          </NavigationMenuContent>
+        </NavigationMenuItem>
+      </NavigationMenuList>
+    </NavigationMenu>
   );
 };

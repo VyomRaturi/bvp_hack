@@ -131,7 +131,7 @@ export const addQuestionsToHackathon = async (
 };
 
 export const getParameters = async (name: string, desc: string) => {
-  const res = await fetch("https://api.hyperleap.ai/prompts", {
+  const res = await fetch("https://api.hyperleapai.com/prompt-runs/run-sync", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -155,7 +155,7 @@ export const getQuestionsFromParameters = async (
   parameters: string[],
   remarks?: string
 ): Promise<QuestionInput[]> => {
-  const res = await fetch("https://api.hyperleap.ai/prompts", {
+  const res = await fetch("https://api.hyperleapai.com/prompt-runs/run-sync", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

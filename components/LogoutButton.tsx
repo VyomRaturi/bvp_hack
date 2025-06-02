@@ -7,9 +7,11 @@ import { useRouter } from "next/navigation";
 import { toast } from "./ui/use-toast";
 import Cookie from "js-cookie";
 import { Button } from "./ui/button";
+import { useUser } from "@/context/UserContext";
 
 const LogoutButton: React.FC = () => {
   const router = useRouter();
+  const { refreshUser } = useUser();
 
   const handleLogout = async () => {
     try {
@@ -25,12 +27,14 @@ const LogoutButton: React.FC = () => {
         throw new Error(errorData.message || "Failed to logout.");
       }
 
+      Cookie.remove("authToken");
+      Cookie.remove("token");
+      await refreshUser(); // This will set the user to null
+      router.push("/login");
+
       toast({
         title: "Logged out successfully",
       });
-      //   toast.success("Logged out successfully.");
-      Cookie.remove("authToken");
-      window.location.href = "/login";
     } catch (error: any) {
       console.error("Logout failed:", error);
       toast({

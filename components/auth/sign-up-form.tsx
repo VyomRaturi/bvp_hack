@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { FC, useState } from "react";
+import { useState } from "react";
 import {
   Form,
   FormControl,
@@ -16,22 +16,23 @@ import { useForm } from "react-hook-form";
 import { toast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "reactfire";
-import { createUser } from "@/lib/actions/createUser";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(8).max(100),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .max(100),
 });
 
 interface SignUpFormProps {
   onShowLogin: () => void;
-  onSignUp?: () => void;
 }
 
-export const SignUpForm: FC<SignUpFormProps> = ({ onShowLogin, onSignUp }) => {
+export const SignUpForm: React.FC<SignUpFormProps> = ({ onShowLogin }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -41,28 +42,37 @@ export const SignUpForm: FC<SignUpFormProps> = ({ onShowLogin, onSignUp }) => {
     },
   });
 
-  const auth = useAuth();
-
   const signup = async ({ email, password }: z.infer<typeof formSchema>) => {
     try {
       setIsLoading(true);
 
-      const user = await createUserWithEmailAndPassword(auth, email, password);
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-      if (user?.user.uid && user.user.email) {
-        await createUser(email, password, "user");
+      const data = await response.json();
 
-        toast({ title: "Account created!" });
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to create account");
       }
-    } catch (err: any) {
-      if ("code" in err && err.code.includes("already")) {
-        toast({ title: "User already exists" });
-      } else {
-        toast({
-          title: "Error signing up",
-          description: `${err.message || err}`,
-        });
-      }
+
+      toast({
+        title: "Account created!",
+        description: "Your account has been created successfully.",
+      });
+
+      router.push("/dashboard");
+    } catch (error) {
+      toast({
+        title: "Error signing up",
+        description:
+          error instanceof Error ? error.message : "Failed to create account",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -99,7 +109,9 @@ export const SignUpForm: FC<SignUpFormProps> = ({ onShowLogin, onSignUp }) => {
                 </FormItem>
               )}
             />
-            <Button type="submit">Sign Up</Button>
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? "Creating Account..." : "Sign Up"}
+            </Button>
           </fieldset>
         </form>
       </Form>

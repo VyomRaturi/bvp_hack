@@ -1,8 +1,8 @@
 // src/app/layout.tsx
 import "./globals.css";
 import { UserProvider } from "@/context/UserContext";
-import { Footer } from "@/components/footer";
 import { NavBar } from "@/components/navbar/navbar";
+
 export default function RootLayout({
   children,
 }: {
@@ -11,8 +11,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <NavBar />
-        <UserProvider>{children}</UserProvider>
+        <UserProvider>
+          <NavBar />
+          {children}
+        </UserProvider>
       </body>
     </html>
   );

@@ -5,19 +5,21 @@ import Hackathon from "@/models/Hackathon";
 import User from "@/models/User";
 import Team from "@/models/Team";
 import connectDB from "@/lib/mongodb";
-// import bcrypt from "bcrypt";
+import bcrypt from "bcrypt";
 import crypto from "crypto";
+import mongoose, { Types } from "mongoose";
+import { IHackathon } from "@/models/Hackathon";
 
-// interface JudgeInput {
-//   name: string;
-//   email: string;
-// }
+interface JudgeInput {
+  name: string;
+  email: string;
+}
 
-// interface TeamInput {
-//   name: string;
-//   email: string;
-//   members: string; // Comma-separated string
-// }
+interface TeamInput {
+  name: string;
+  email: string;
+  members: string;
+}
 
 interface JudgeOutput {
   email: string;
@@ -27,9 +29,8 @@ interface JudgeOutput {
 
 interface TeamOutput {
   email: string;
-  teamName: string;
+  name: string;
   pass: string;
-  members: string;
 }
 
 /**
@@ -42,59 +43,66 @@ const generatePassword = (length: number = 12): string => {
     .randomBytes(length)
     .toString("base64")
     .slice(0, length)
-    .replace(/\+/g, "0") // Replace '+' with '0'
-    .replace(/\//g, "0"); // Replace '/' with '0'
+    .replace(/\+/g, "0")
+    .replace(/\//g, "1")
+    .replace(/=/g, "2");
 };
 
 export async function POST(request: NextRequest) {
   try {
-    const data = await request.json();
+    await connectDB();
 
-    const { hackName, hackDesc, start, end, judges, teams } = data;
-    console.log(data);
+    const body = await request.json();
+    console.log("Received request body:", body);
 
-    // Input validation
-    if (
-      !hackName ||
-      !hackDesc ||
-      !start ||
-      !end ||
-      !Array.isArray(judges) ||
-      !Array.isArray(teams)
-    ) {
-      return NextResponse.json(
-        { message: "Invalid input data. Please provide all required fields." },
-        { status: 400 }
+    const {
+      hackName: name,
+      hackDesc: description,
+      start,
+      end,
+      judges,
+      teams,
+    } = body;
+    console.log("Parsed data:", { name, description, start, end });
+    console.log("Judges:", judges);
+    console.log("Teams:", teams);
+
+    // Validate required fields
+    if (!name || !description || !start || !end) {
+      throw new Error(
+        `Missing required fields. Got: name=${name}, description=${description}, start=${start}, end=${end}`
       );
     }
 
-    await connectDB();
-
-    // Create Hackathon
-    const hackathon = await Hackathon.create({
-      name: hackName,
-      description: hackDesc,
+    // Create Hackathon with initialized arrays
+    const hackathon = new Hackathon({
+      name,
+      description,
       startDate: new Date(start),
       endDate: new Date(end),
-      judges: [],
-      teams: [],
-      questions: [],
+      judges: [] as Types.ObjectId[],
+      teams: [] as Types.ObjectId[],
+      questions: [] as Types.ObjectId[],
     });
 
-    const hackathonId = hackathon._id;
+    console.log("Created hackathon:", hackathon);
 
+    const hackathonId = hackathon._id;
     const judgesOutput: JudgeOutput[] = [];
     const teamsOutput: TeamOutput[] = [];
 
     // Process Judges
-    for (const judge of judges) {
+    console.log("Processing judges...");
+    for (const judge of judges as JudgeInput[]) {
       const { name, email } = judge;
+      console.log("Processing judge:", { name, email });
 
       if (!name || !email) {
         throw new Error("Each judge must have a name and an email.");
       }
 
-      const normalizedEmail = "jud4wadsfsddasdf" + email.toLowerCase();
+      const normalizedEmail = "jud" + email.toLowerCase();
+      console.log("Normalized judge email:", normalizedEmail);
 
       // Check if judge already exists
       const existingJudge = await User.findOne({ email: normalizedEmail });
@@ -103,18 +111,20 @@ export async function POST(request: NextRequest) {
       }
 
       const plainPassword = generatePassword(12);
-      //   const hashedPassword = await bcrypt.hash(plainPassword, 10);
+      console.log("Generated password for judge:", plainPassword);
 
       // Create Judge User
       const newJudge = await User.create({
         name,
         email: normalizedEmail,
-        password: plainPassword,
+        password: plainPassword, // Password will be hashed by the User model's pre-save middleware
         role: "judge",
       });
+      console.log("Created judge:", newJudge);
 
-      // Associate Judge with Hackathon
-      hackathon.judges?.push(newJudge.id);
+      // Associate Judge with Hackathon using proper typing
+      const judgeId = newJudge._id as Types.ObjectId;
+      hackathon.judges = [...hackathon.judges, judgeId];
 
       // Prepare Output
       judgesOutput.push({
@@ -125,13 +135,17 @@ export async function POST(request: NextRequest) {
     }
 
     // Process Teams
-    for (const team of teams) {
+    console.log("Processing teams...");
+    for (const team of teams as TeamInput[]) {
       const { name, email, members } = team;
+      console.log("Processing team:", { name, email, members });
+
       if (!name || !email || !members) {
         throw new Error("Each team must have a name, an email, and members.");
       }
 
-      const normalizedEmail = "teamsdfsdufibjssdfsdfdf" + email.toLowerCase();
+      const normalizedEmail = email.toLowerCase();
+      console.log("Normalized team email:", normalizedEmail);
 
       // Check if team already exists
       const existingTeam = await Team.findOne({ email: normalizedEmail });
@@ -140,47 +154,53 @@ export async function POST(request: NextRequest) {
       }
 
       const plainPassword = generatePassword(12);
-      //   const hashedPassword = await bcrypt.hash(plainPassword, 10);
+      console.log("Generated password for team:", plainPassword);
 
       // Create Team
       const newTeam = await Team.create({
         name,
         email: normalizedEmail,
-        password: plainPassword,
-        members, // Stored as a comma-separated string
+        password: plainPassword, // Will be hashed by Team model's pre-save middleware if implemented
+        members,
         hackathon: hackathonId,
       });
-      console.log("new team, ", newTeam);
-      // Associate Team with Hackathon
-      // if (newTeam._id)
-      hackathon.teams?.push(newTeam.id);
+      console.log("Created team:", newTeam);
+
+      // Add team to hackathon's teams array using proper typing
+      const teamId = newTeam._id as Types.ObjectId;
+      hackathon.teams = [...hackathon.teams, teamId];
 
       // Prepare Output
       teamsOutput.push({
         email: normalizedEmail,
-        teamName: name,
+        name,
         pass: plainPassword,
-        members,
       });
     }
 
-    // Save Hackathon with associated Judges and Teams
+    // Save the hackathon with updated judges and teams
+    console.log("Saving hackathon with judges and teams...");
     await hackathon.save();
+    console.log("Hackathon saved successfully!");
 
-    // Return the Outputs
+    return NextResponse.json({
+      success: true,
+      hackathon: {
+        id: hackathonId,
+        name: hackathon.name,
+      },
+      judges: judgesOutput,
+      teams: teamsOutput,
+    });
+  } catch (error: any) {
+    console.error("Error in hackathon creation:", error);
     return NextResponse.json(
       {
-        hack: hackathonId,
-        judges: judgesOutput,
-        teams: teamsOutput,
+        success: false,
+        error:
+          error.message || "An error occurred while creating the hackathon.",
       },
-      { status: 201 }
-    );
-  } catch (error: any) {
-    console.error("Error creating hackathon:", error);
-    return NextResponse.json(
-      { message: error.message || "Internal Server Error." },
-      { status: 500 }
+      { status: 400 }
     );
   }
 }

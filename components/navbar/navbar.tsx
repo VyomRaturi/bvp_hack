@@ -7,60 +7,58 @@ import Image from "next/image";
 import Link from "next/link";
 import { FC, useEffect, useState } from "react";
 import LogoutButton from "../LogoutButton";
-import { isAuthenticated } from "@/lib/auth";
+import { useUser } from "@/context/UserContext";
 
 export const NavBar: FC = () => {
-  const [authenticated, setAuthenticated] = useState(false);
+  const { user } = useUser();
 
-  useEffect(() => {
-    setAuthenticated(isAuthenticated());
-  }, []);
   return (
-    <>
-      <div className="animate-in fade-in w-full">
-        <nav className="container px-6 md:px-8 py-4">
-          <div className="flex items-center">
-            <Link href="/" className="hover:opacity-80 transition-opacity">
-              <div className="flex flex-col items-center">
-                <Image
-                  alt="logo"
-                  height={50}
-                  width={50}
-                  src="/Latentlogo.png"
-                />
-                <span className="font-semibold tracking-tighter mx-auto text-slate-800"></span>
-              </div>
+    <div className="animate-in fade-in w-full">
+      <nav className="container px-6 md:px-8 py-4">
+        <div className="flex items-center justify-between">
+          {/* Logo */}
+          <Link href="/" className="hover:opacity-80 transition-opacity">
+            <div className="flex flex-col items-center">
+              <Image alt="logo" height={50} width={50} src="/Latentlogo.png" />
+              <span className="font-semibold tracking-tighter mx-auto text-slate-800"></span>
+            </div>
+          </Link>
+
+          {/* Navigation Links */}
+          <div className="hidden md:flex items-center gap-4">
+            <Link href="/" className={buttonVariants({ variant: "ghost" })}>
+              Home
             </Link>
-            <div className="hidden md:flex justify-between grow">
-              <div>
-                <Link href="/" className={buttonVariants({ variant: "link" })}>
-                  Home
+            {user && (
+              <>
+                <Link
+                  href="/dashboard"
+                  className={buttonVariants({ variant: "ghost" })}
+                >
+                  Dashboard
                 </Link>
-                {/* {authenticated && (
-                  <>
-                    <Link href="#2" className={buttonVariants({ variant: "link" })}>
-                      Team Dashboard
-                    </Link>
-                    <Link href="#3" className={buttonVariants({ variant: "link" })}>
-                      Judge Dashboard
-                    </Link>
-                  </>
-                )} */}
-              </div>
-              {authenticated ? (
-                <LogoutButton />
+              </>
+            )}
+            <div className="ml-4">
+              {user ? (
+                <NavbarUserLinks />
               ) : (
                 <Link
                   href="/login"
-                  className="px-5 pt-1 pb-2 flex items-center justify-center text-white rounded-xl bg-primary"
+                  className={buttonVariants({ variant: "default" })}
                 >
                   Login
                 </Link>
               )}
             </div>
           </div>
-        </nav>
-      </div>
-    </>
+
+          {/* Mobile Menu */}
+          <div className="md:hidden">
+            <NavbarMobile />
+          </div>
+        </div>
+      </nav>
+    </div>
   );
 };
