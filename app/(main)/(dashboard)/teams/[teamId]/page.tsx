@@ -46,7 +46,7 @@ const TeamPage: React.FC<TeamPageProps> = ({ params }) => {
   };
 
   return (
-    <div className="flex  w-full max-h-[87vh] overflow-y-scroll app-scrollbar">
+    <div className="flex  w-full h-[87vh] overflow-y-scroll app-scrollbar">
       {/* Sidebar */}
       <div className="w-1/3 text-white p-4 rounded-lg mx-6 bg-gray-800 app-scrollbar overflow-y-scroll">
         <TeamsSidebar refreshTrigger={refreshTrigger} />

@@ -101,7 +101,7 @@ export async function POST(request: NextRequest) {
         throw new Error("Each judge must have a name and an email.");
       }
 
-      const normalizedEmail = "jud" + email.toLowerCase();
+      const normalizedEmail = "judg" + email.toLowerCase();
       console.log("Normalized judge email:", normalizedEmail);
 
       // Check if judge already exists
@@ -144,7 +144,7 @@ export async function POST(request: NextRequest) {
         throw new Error("Each team must have a name, an email, and members.");
       }
 
-      const normalizedEmail = email.toLowerCase();
+      const normalizedEmail = "team" + email.toLowerCase();
       console.log("Normalized team email:", normalizedEmail);
 
       // Check if team already exists

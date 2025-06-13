@@ -20,7 +20,6 @@ export async function getCurrentUser(req: NextRequest) {
   try {
     // Get token from cookies
     const token = req.cookies.get("token")?.value;
-    console.log("Token from cookie:", token);
 
     if (!token) {
       console.log("No token found in cookies");
@@ -29,14 +28,12 @@ export async function getCurrentUser(req: NextRequest) {
 
     // Verify and decode the token
     const decoded = jwt.verify(token, JWT_SECRET) as DecodedToken;
-    console.log("Decoded token:", decoded);
 
     // Connect to database
     await connectDB();
 
     // Find user by ID and exclude password
     const user = await User.findById(decoded.userId).select("-password").lean();
-    console.log("Found user:", user);
 
     if (!user) {
       console.log("No user found for token");

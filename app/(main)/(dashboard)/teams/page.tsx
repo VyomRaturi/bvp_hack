@@ -31,9 +31,9 @@ const TeamsPage: React.FC = () => {
   }, [router]);
 
   return (
-    <div className="flex w-full">
+    <div className="flex  w-full h-[87vh] overflow-y-scroll app-scrollbar">
       {/* Sidebar */}
-      <div className="w-1/3 bg-gray-800 text-white p-4">
+      <div className="w-1/3 text-white p-4 rounded-lg mx-6 bg-gray-800 app-scrollbar overflow-y-scroll">
         <TeamsSidebar refreshTrigger={false} />
       </div>
       {/* Main Content */}
